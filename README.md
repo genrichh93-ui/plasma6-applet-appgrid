@@ -141,6 +141,18 @@ After installing, restart Plasma:
 kquitapp6 plasmashell && kstart plasmashell
 ```
 
+### Arch Linux: build and install from PKGBUILD
+
+The repository includes a `PKGBUILD` for building a local Arch package:
+
+```bash
+makepkg -sf
+sudo pacman -U plasma6-applets-appgrid-*.pkg.tar.zst
+kquitapp6 plasmashell && kstart plasmashell
+```
+
+`-s` installs missing dependencies, `-f` overwrites any existing package file.
+
 ## Usage
 
 1. Right-click your current application launcher in the panel
