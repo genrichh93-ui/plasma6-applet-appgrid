@@ -189,6 +189,24 @@ Kirigami.ShadowedRectangle {
             }
             if (status === Loader.Ready && item) {
                 item.initForClient("dev.xarbit.appgrid.favorites.instance-" + Plasmoid.id)
+                // The "favoriteId" role lives at Kicker::FavoriteIdRole
+                // (Qt::UserRole + 3 = 259) in current Plasma. roleNames() is
+                // not Q_INVOKABLE on QAbstractItemModel in Qt6, so we can't
+                // resolve it dynamically; check at runtime that data() at the
+                // assumed role returns a string before relying on it.
+                if (item.count > 0) {
+                    const probe = item.data(item.index(0, 0), 259)
+                    if (typeof probe === "string") {
+                        panel._favoriteIdRole = 259
+                    } else {
+                        console.warn("AppGrid: FavoriteIdRole probe failed (got " + typeof probe
+                                     + "); favorites reorder will be inert. Kicker enum may have shifted.")
+                    }
+                } else {
+                    // No entries yet — accept the well-known value; the probe
+                    // re-runs once entries land via onRowsInserted below.
+                    panel._favoriteIdRole = 259
+                }
                 // Migration + initial mirror are deferred until the model is
                 // 'enabled' — KAStats only honours portOldFavorites once
                 // kactivitymanagerd has finished initialising. See Connections
@@ -229,9 +247,14 @@ Kirigami.ShadowedRectangle {
     // ("returns nothing, it is here just to keep the API backwards-compatible"),
     // so we read favoriteIds row-by-row instead. AppFilterModel matches against
     // bare storage IDs, so strip the "applications:" scheme prefix when present.
-    readonly property int _favoriteIdRole: 259 // Kicker::FavoriteIdRole = Qt.UserRole + 3
+    // Resolved imperatively in sharedFavoritesLoader's onStatusChanged once
+    // the shared model's roleNames() is available. -1 means "not yet known";
+    // _findFavoriteRow and _mirrorFavorites guard on that.
+    property int _favoriteIdRole: -1
+
     function _mirrorFavorites() {
         if (!panel.appsModel || !panel.sharedFavoritesModel) return
+        if (_favoriteIdRole < 0) return
         const model = panel.sharedFavoritesModel
         const ids = []
         for (let i = 0; i < model.count; ++i) {
@@ -262,24 +285,50 @@ Kirigami.ShadowedRectangle {
     // KAStatsFavoritesModel does not emit `favoritesChanged` despite the
     // Q_PROPERTY declaration — upstream Kicker leaves it as a stub. We listen
     // to QAbstractItemModel signals instead, which fire on every change.
-    Connections {
-        target: panel.sharedFavoritesModel
-        ignoreUnknownSignals: true
-        function _onChanged() {
-            // Finalise migration once KAStats actually has entries.
+    // Coalesce bursts of model-change signals: when KAStats reorders or
+    // reloads, several of insert/remove/move/reset/layoutChanged/dataChanged
+    // can fire back-to-back. We schedule one mirror per event-loop turn
+    // instead of mirroring on every signal.
+    // The mirror only needs to run when AppFilterModel actually serves the
+    // favorites view (alpha-sort mode). In normal drag-reorder mode the
+    // GridView reads sharedFavoritesModel directly, so there's nothing to
+    // mirror into.
+    readonly property bool mirrorRequired: Plasmoid.configuration.sortFavoritesAlphabetically === true
+
+    Timer {
+        id: mirrorCoalesce
+        interval: 0
+        repeat: false
+        onTriggered: {
             if (!Plasmoid.configuration.favoritesPortedToKAstats
                     && panel.sharedFavoritesModel
                     && panel.sharedFavoritesModel.count > 0) {
                 Plasmoid.configuration.favoritesPortedToKAstats = true
             }
-            panel._mirrorFavorites()
+            if (panel.mirrorRequired)
+                panel._mirrorFavorites()
         }
-        function onRowsInserted() { _onChanged() }
-        function onRowsRemoved() { _onChanged() }
-        function onRowsMoved() { _onChanged() }
-        function onModelReset() { _onChanged() }
-        function onLayoutChanged() { _onChanged() }
-        function onDataChanged() { _onChanged() }
+    }
+
+    // Catch up the proxy when the user enables alpha-sort mid-session.
+    onMirrorRequiredChanged: {
+        if (mirrorRequired) mirrorCoalesce.restart()
+    }
+
+    Connections {
+        target: panel.sharedFavoritesModel
+        ignoreUnknownSignals: true
+        function _scheduleMirror() {
+            // Migration finalisation still needs to happen even when not
+            // mirroring (so the flag flips once KAStats has data).
+            mirrorCoalesce.restart()
+        }
+        function onRowsInserted() { _scheduleMirror() }
+        function onRowsRemoved() { _scheduleMirror() }
+        function onRowsMoved() { _scheduleMirror() }
+        function onModelReset() { _scheduleMirror() }
+        function onLayoutChanged() { _scheduleMirror() }
+        function onDataChanged() { _scheduleMirror() }
     }
 
 
@@ -305,8 +354,6 @@ Kirigami.ShadowedRectangle {
         }
 
         // Reset grid state
-        appGrid.editMode = false
-        appGrid.selectedSwapIndex = -1
         appGrid.clearShuffles()
         appGrid.contentY = appGrid.originY
         appGrid.currentIndex = -1
@@ -510,7 +557,6 @@ Kirigami.ShadowedRectangle {
                 }
                 categoryBar.favoritesActive = active
                 if (!active) {
-                    appGrid.editMode = false
                     if (panel.isSortByCategory) {
                         categoryBar.scrollOnlySelected = ""
                         categoryGridView.contentY = 0
@@ -633,9 +679,21 @@ Kirigami.ShadowedRectangle {
 
                 AppGridView {
                     id: appGrid
-                    model: !panel.isSearching ? panel.appsModel : null
+                    // In favorites tab, drive the grid from KAStats directly so
+                    // reorder animations and pointer grabs work natively.
+                    // Elsewhere, or when alphabetical sort is enabled (which
+                    // KAStats does not support), use the filter proxy.
+                    model: panel.isSearching ? null
+                           : (panel.isFavoritesActive
+                              && panel.sharedFavoritesModel
+                              && !Plasmoid.configuration.sortFavoritesAlphabetically
+                              ? panel.sharedFavoritesModel
+                              : panel.appsModel)
                     appsModel: panel.appsModel
                     sharedFavoritesModel: panel.sharedFavoritesModel
+                    _favoriteIdRole: panel._favoriteIdRole
+                    favoritesDragProxy: panel.appletInterface
+                                        ? panel.appletInterface.favoritesDragProxy : null
                     columns: panel.columns
                     adaptiveColumns: panel.nativePopup
                     iconSize: panel.gridIconSize
@@ -668,8 +726,13 @@ Kirigami.ShadowedRectangle {
                     onShuffleAnimRequested: function(fromX, fromY, toX, toY, fromIcon, toIcon, fromIndex, toIndex) {
                         shuffleOverlay.startAnim(fromX, fromY, toX, toY, fromIcon, toIcon, fromIndex, toIndex)
                     }
-                    onFavoritesOrderChanged: {
-                        // KAStats backend persists itself; nothing to do here.
+                    onExternalFavoriteDragReceived: {
+                        // Force the favorites tab so the drop lands in the
+                        // KAStats-backed view. Clearing the search field too
+                        // so we leave search mode.
+                        searchBar.text = ""
+                        if (!panel.isFavoritesActive)
+                            categoryBar.favoritesActive = true
                     }
                 }
             }
@@ -687,55 +750,6 @@ Kirigami.ShadowedRectangle {
         }
     }
 
-    // -- Edit mode overlay (on top of everything) --
-    Rectangle {
-        anchors.bottom: editModeBtn.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: Kirigami.Units.smallSpacing
-        z: 100
-        visible: appGrid.editMode
-        width: helpLabel.implicitWidth + Kirigami.Units.largeSpacing * 2
-        height: helpLabel.implicitHeight + Kirigami.Units.smallSpacing * 2
-        radius: Kirigami.Units.cornerRadius
-        color: Qt.rgba(Kirigami.Theme.backgroundColor.r,
-                       Kirigami.Theme.backgroundColor.g,
-                       Kirigami.Theme.backgroundColor.b, 0.9)
-
-        PlasmaComponents.Label {
-            id: helpLabel
-            anchors.centerIn: parent
-            text: appGrid.selectedSwapIndex < 0
-                  ? i18nd("dev.xarbit.appgrid", "Click an icon to select it, then click another to swap positions")
-                  : i18nd("dev.xarbit.appgrid", "Now click another icon to swap, or click again to deselect")
-            font: Kirigami.Theme.smallFont
-        }
-    }
-
-    PlasmaComponents.ToolButton {
-        id: editModeBtn
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: Kirigami.Units.largeSpacing
-        anchors.rightMargin: Kirigami.Units.largeSpacing
-            + (panel.cfgShowScrollbars && appGrid.contentHeight > appGrid.height ? Kirigami.Units.gridUnit : 0)
-        z: 100
-        visible: panel.isFavoritesActive && !panel.isSearching
-                 && !Plasmoid.configuration.sortFavoritesAlphabetically
-        icon.name: appGrid.editMode ? "dialog-ok-apply" : "document-edit"
-        checked: appGrid.editMode
-        onClicked: {
-            appGrid.editMode = !appGrid.editMode
-            appGrid.selectedSwapIndex = -1
-            if (!appGrid.editMode) {
-                appGrid.favoritesOrderChanged()
-                searchBar.field.forceActiveFocus()
-            }
-        }
-
-        PlasmaComponents.ToolTip.text: appGrid.editMode ? i18nd("dev.xarbit.appgrid", "Done") : i18nd("dev.xarbit.appgrid", "Reorder favorites")
-        PlasmaComponents.ToolTip.visible: hovered
-        PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
-    }
 
     // -----------------------------------------------------------------------
     // Context menu

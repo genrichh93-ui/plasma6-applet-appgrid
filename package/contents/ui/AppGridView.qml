@@ -9,6 +9,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.plasmoid
 
 GridView {
     id: gridView
@@ -35,8 +36,11 @@ GridView {
     // Emitted when the user right-clicks an app.
     signal contextMenuRequested(int index, string storageId, string desktopFile)
 
+    // Emitted when a drag with .desktop URLs enters from outside; the host
+    // should switch to the favorites tab so the drop lands there.
+    signal externalFavoriteDragReceived()
+
     // Emitted when favorites order changes via drag reorder.
-    signal favoritesOrderChanged()
 
     // --- Shuffle animation state ---
     // Maps proxy index -> icon name override for visual-only icon swaps.
@@ -114,29 +118,15 @@ GridView {
         return fallbackName || defaultIcon
     }
 
-    // Whether edit/reorder mode is active
-    property bool editMode: false
-    // Index of currently selected item for swap (-1 = none)
-    property int selectedSwapIndex: -1
-
-    // Auto-exit edit mode after inactivity
-    Timer {
-        id: editTimeout
-        interval: 10000
-        running: gridView.editMode
-        onTriggered: {
-            gridView.editMode = false
-            gridView.selectedSwapIndex = -1
-            gridView.favoritesOrderChanged()
-        }
-    }
-
-    onSelectedSwapIndexChanged: {
-        if (editMode) editTimeout.restart()
-    }
-
     clip: true
-    cacheBuffer: Kirigami.Units.gridUnit * 4
+    // Cache buffer: extra screens of delegates kept alive off-screen. Grown
+    // while a drag is in flight so an auto-scroll cannot recycle the source
+    // delegate (which would drop the pointer grab). One viewport of slack
+    // is enough — the row count of favorites that fit in a viewport is the
+    // upper bound on how far auto-scroll moves before the user lifts.
+    cacheBuffer: (favoritesDragProxy && favoritesDragProxy.Drag.active)
+                 ? Math.max(height, Kirigami.Units.gridUnit * 16)
+                 : Kirigami.Units.gridUnit * 4
     readonly property bool labelsHidden: hideLabelsOnFavorites && favoritesActive
     cellWidth: Math.floor(width / effectiveColumns)
     cellHeight: labelsHidden
@@ -163,12 +153,15 @@ GridView {
     // The apps model for section queries
     property var appsModel: null
     property var sharedFavoritesModel: null
+    // Shared drag proxy from the plasmoid root; set by GridPanel.
+    property var favoritesDragProxy: null
 
-    // Mirror of Kicker::FavoriteIdRole = Qt.UserRole + 3
-    readonly property int _favoriteIdRole: 259
+    // FavoriteId role index — pushed in by the owner once the shared model
+    // is ready (see GridPanel.sharedFavoritesLoader). -1 disables lookup.
+    property int _favoriteIdRole: -1
 
     function _findFavoriteRow(storageId) {
-        if (!sharedFavoritesModel) return -1
+        if (!sharedFavoritesModel || _favoriteIdRole < 0) return -1
         const prefixed = "applications:" + storageId
         for (let i = 0; i < sharedFavoritesModel.count; ++i) {
             const v = sharedFavoritesModel.data(sharedFavoritesModel.index(i, 0), _favoriteIdRole)
@@ -221,18 +214,28 @@ GridView {
             recentLaunched(appsModel.recentApps[idx])
     }
 
-    Keys.onReturnPressed: {
-        if (recentIndex >= 0)
+    function _launchCurrent() {
+        if (recentIndex >= 0) {
             launchRecentByIndex(recentIndex)
-        else if (currentIndex >= 0)
+            return
+        }
+        if (currentIndex < 0) return
+        // In favorites view the grid is bound to KAStats directly, so the
+        // current index is a favorites row, not a proxy row. Resolve to a
+        // storageId and launch via the shared launch path.
+        if (favoritesActive && sharedFavoritesModel
+                && model === sharedFavoritesModel) {
+            const v = sharedFavoritesModel.data(
+                sharedFavoritesModel.index(currentIndex, 0), _favoriteIdRole)
+            const sid = (v && v.indexOf && v.indexOf("applications:") === 0)
+                        ? v.substring(13) : (v || "")
+            if (sid) recentLaunched(sid)
+        } else {
             launched(currentIndex)
+        }
     }
-    Keys.onEnterPressed: {
-        if (recentIndex >= 0)
-            launchRecentByIndex(recentIndex)
-        else if (currentIndex >= 0)
-            launched(currentIndex)
-    }
+    Keys.onReturnPressed: _launchCurrent()
+    Keys.onEnterPressed: _launchCurrent()
     Keys.onUpPressed: {
         if (recentIndex >= 0) {
             // Move up within recents row — go to row above if possible
@@ -283,6 +286,44 @@ GridView {
     // Consume Tab to prevent it from reaching the focus chain or search bar
     Keys.onTabPressed: function(event) { event.accepted = true }
     Keys.onBacktabPressed: function(event) { event.accepted = true }
+
+    // -- Keyboard reorder (favorites tab, KAStats-backed view) --
+    function _kbdReorderable() {
+        return favoritesActive
+               && sharedFavoritesModel
+               && model === sharedFavoritesModel
+               && !Plasmoid.configuration.sortFavoritesAlphabetically
+               && currentIndex >= 0
+    }
+
+    function _kbdMove(target) {
+        if (!_kbdReorderable()) return false
+        if (target < 0 || target >= count || target === currentIndex) return false
+        sharedFavoritesModel.moveRow(currentIndex, target)
+        currentIndex = target
+        return true
+    }
+
+    Shortcut {
+        sequence: "Ctrl+Shift+Right"
+        enabled: _kbdReorderable() && currentIndex < count - 1
+        onActivated: _kbdMove(currentIndex + 1)
+    }
+    Shortcut {
+        sequence: "Ctrl+Shift+Left"
+        enabled: _kbdReorderable() && currentIndex > 0
+        onActivated: _kbdMove(currentIndex - 1)
+    }
+    Shortcut {
+        sequence: "Ctrl+Shift+Down"
+        enabled: _kbdReorderable() && currentIndex + effectiveColumns < count
+        onActivated: _kbdMove(currentIndex + effectiveColumns)
+    }
+    Shortcut {
+        sequence: "Ctrl+Shift+Up"
+        enabled: _kbdReorderable() && currentIndex - effectiveColumns >= 0
+        onActivated: _kbdMove(currentIndex - effectiveColumns)
+    }
 
     Keys.onPressed: function(event) {
         // Redirect typing to search bar, but not Tab or special keys
@@ -346,70 +387,73 @@ GridView {
         width: gridView.cellWidth
         height: gridView.cellHeight
 
+        // When favoritesActive, the grid is driven directly by
+        // sharedFavoritesModel (KAStats), which exposes different role names
+        // than AppFilterModel. Resolve the storage id from the model and
+        // look up the matching AppModel row for non-essential fields
+        // (genericName, comment, installSource, desktopFile, isNew).
+        readonly property bool _fromShared: gridView.favoritesActive
+                                            && gridView.sharedFavoritesModel
+                                            && gridView.model === gridView.sharedFavoritesModel
+        readonly property string _sid: _fromShared
+            ? ((model.favoriteId || "").indexOf("applications:") === 0
+                ? model.favoriteId.substring(13) : (model.favoriteId || ""))
+            : (model.storageId || "")
+        readonly property var _appData: _fromShared && gridView.appsModel
+                                        ? gridView.appsModel.getByStorageId(_sid) : null
+
         AppIconDelegate {
             id: iconDelegate
             anchors.fill: parent
-            appName: model.name || ""
-            appIcon: model.iconName || "application-x-executable"
-            displayIcon: gridView.getDisplayIcon(model.index)
-            appGenericName: model.genericName || ""
-            appComment: model.comment || ""
-            installSource: model.installSource || ""
+            appName: delegateRoot._fromShared
+                ? (model.display || (delegateRoot._appData ? delegateRoot._appData.name : "") || "")
+                : (model.name || "")
+            appIcon: delegateRoot._fromShared
+                ? ((delegateRoot._appData && delegateRoot._appData.iconName)
+                   || model.decoration || "application-x-executable")
+                : (model.iconName || "application-x-executable")
+            displayIcon: delegateRoot._fromShared ? "" : gridView.getDisplayIcon(model.index)
+            appGenericName: delegateRoot._fromShared
+                ? (delegateRoot._appData ? delegateRoot._appData.genericName || "" : "")
+                : (model.genericName || "")
+            appComment: delegateRoot._fromShared
+                ? (delegateRoot._appData ? delegateRoot._appData.comment || "" : "")
+                : (model.comment || "")
+            installSource: delegateRoot._fromShared
+                ? (delegateRoot._appData ? delegateRoot._appData.installSource || "" : "")
+                : (model.installSource || "")
             showTooltip: gridView.showTooltips
             hideLabel: gridView.hideLabelsOnFavorites && gridView.favoritesActive
             isCurrentItem: gridView.currentIndex === model.index
             iconSize: gridView.iconSize
-            isNew: gridView.showNewAppBadge && gridView.appsModel ? gridView.appsModel.isNewApp(model.storageId || "") : false
-            editMode: gridView.editMode
-            isSelected: gridView.editMode && gridView.selectedSwapIndex === model.index
+            isNew: !delegateRoot._fromShared
+                   && gridView.showNewAppBadge && gridView.appsModel
+                   ? gridView.appsModel.isNewApp(delegateRoot._sid) : false
+            storageId: delegateRoot._sid
+            gridRow: model.index
+            // Drag is only available on the favorites tab; manual-ordering
+            // is incompatible with the alphabetical-sort option.
+            dragProxy: (gridView.favoritesActive
+                        && gridView.sharedFavoritesModel
+                        && !Plasmoid.configuration.sortFavoritesAlphabetically)
+                       ? gridView.favoritesDragProxy : null
             onClicked: function(mouse) {
                 if (mouse.button === Qt.RightButton) {
-                    gridView.contextMenuRequested(model.index, model.storageId || "", model.desktopFile || "")
+                    const desktopFile = delegateRoot._fromShared
+                        ? (delegateRoot._appData ? delegateRoot._appData.desktopFile || "" : "")
+                        : (model.desktopFile || "")
+                    gridView.contextMenuRequested(model.index, delegateRoot._sid, desktopFile)
                     return
                 }
-                if (gridView.editMode) {
-                    if (gridView.selectedSwapIndex < 0) {
-                        // First click: select this icon
-                        gridView.selectedSwapIndex = model.index
-                    } else if (gridView.selectedSwapIndex === model.index) {
-                        // Click selected again: deselect
-                        gridView.selectedSwapIndex = -1
-                    } else {
-                        // Click a different icon: swap positions
-                        var fromIndex = gridView.selectedSwapIndex
-                        gridView.selectedSwapIndex = -1
-                        var selectedData = gridView.appsModel.get(fromIndex)
-                        var targetData = gridView.appsModel.get(model.index)
-                        if (selectedData && targetData && gridView.sharedFavoritesModel) {
-                            const li = gridView._findFavoriteRow(selectedData.storageId)
-                            const ri = gridView._findFavoriteRow(targetData.storageId)
-                            if (li >= 0 && ri >= 0 && li !== ri) {
-                                // moveRow is a shift; emulate swap with two moves.
-                                if (li < ri) {
-                                    gridView.sharedFavoritesModel.moveRow(li, ri)
-                                    gridView.sharedFavoritesModel.moveRow(ri - 1, li)
-                                } else {
-                                    gridView.sharedFavoritesModel.moveRow(ri, li)
-                                    gridView.sharedFavoritesModel.moveRow(li - 1, ri)
-                                }
-                            }
-                            gridView.favoritesOrderChanged()
-                        }
-                    }
+                if (delegateRoot._fromShared) {
+                    if (delegateRoot._sid) gridView.recentLaunched(delegateRoot._sid)
                 } else {
                     gridView.launched(model.index)
                 }
             }
-            onShuffleRequested: gridView.shuffleIcon(model.index)
-            onRemoveRequested: {
-                const sid = model.storageId || ""
-                if (sid && gridView.sharedFavoritesModel) {
-                    const prefixed = sid.indexOf(":") >= 0 ? sid : "applications:" + sid
-                    gridView.sharedFavoritesModel.removeFavorite(prefixed)
-                }
-                gridView.favoritesOrderChanged()
-                if (gridView.selectedSwapIndex === model.index)
-                    gridView.selectedSwapIndex = -1
+            onShuffleRequested: {
+                if (!delegateRoot._fromShared)
+                    gridView.shuffleIcon(model.index)
             }
         }
 
@@ -420,5 +464,165 @@ GridView {
                 iconDelegate.displayIcon = gridView.getDisplayIcon(model.index)
             }
         }
+    }
+
+    // -- Drag reorder handler --
+    // Sits behind the delegates (z below them so clicks still reach icons)
+    // and reacts to drag positions originating from the shared favorites
+    // drag proxy. We rewrite the KAStats favorites order on every cursor
+    // movement; the grid's `move`/`moveDisplaced` transitions provide the
+    // animated reflow. If the drop ends outside, we replay the move log
+    // in reverse so the user sees no net change.
+    DropArea {
+        id: reorderArea
+        parent: gridView
+        anchors.fill: parent
+        z: -1
+        // Always alive when the model is available so external file drags
+        // can ferry us to the favorites tab. Internal reorder is still gated
+        // on favoritesActive + non-alphabetical mode further down.
+        enabled: gridView.sharedFavoritesModel !== null
+
+        property var pendingMoves: []
+
+        onEntered: drag => {
+            pendingMoves = []
+            // External drag (file URLs) on a non-favorites tab — switch to
+            // favorites so the drop targets the right model.
+            if (drag.hasUrls
+                    && (!gridView.favoritesActive
+                        || Plasmoid.configuration.sortFavoritesAlphabetically)) {
+                gridView.externalFavoriteDragReceived()
+            }
+        }
+
+        onExited: {
+            // Undo every move when leaving the area without dropping
+            while (pendingMoves.length > 0) {
+                const [from, to] = pendingMoves.pop()
+                gridView.sharedFavoritesModel.moveRow(to, from)
+            }
+        }
+
+        onPositionChanged: drag => {
+            if (!gridView.favoritesDragProxy
+                    || drag.source !== gridView.favoritesDragProxy
+                    || !gridView.favoritesDragProxy.sourceItem
+                    || !gridView.sharedFavoritesModel) {
+                return
+            }
+            // Hold off on reorder while existing animations or auto-scroll
+            // are still settling. Subsequent positionChanged events as the
+            // pointer moves will retry.
+            if (gridView.move.running || gridView.moveDisplaced.running
+                    || gridView.flicking || gridView.moving
+                    || scrollUp.running || scrollDown.running) {
+                drag.accept(Qt.MoveAction)
+                return
+            }
+
+            const source = gridView.favoritesDragProxy.sourceItem
+            // Re-resolve the source's current row from the model rather than
+            // trusting the cached value — content may have shifted under us
+            // during a scroll or external favorites change.
+            const liveSourceRow = gridView._findFavoriteRow(source.storageId)
+            if (liveSourceRow < 0) return
+            source.gridRow = liveSourceRow
+
+            const pos = mapToItem(gridView.contentItem, drag.x, drag.y)
+            const target = gridView.indexAt(pos.x, pos.y)
+            if (target < 0 || target === liveSourceRow) {
+                drag.accept(Qt.MoveAction)
+                return
+            }
+
+            gridView.sharedFavoritesModel.moveRow(liveSourceRow, target)
+            pendingMoves.push([liveSourceRow, target])
+            source.gridRow = target
+            drag.accept(Qt.MoveAction)
+        }
+
+        onDropped: drag => {
+            // Internal reorder ended — KAStats persists itself.
+            if (gridView.favoritesDragProxy
+                    && drag.source === gridView.favoritesDragProxy) {
+                pendingMoves = []
+                return
+            }
+            // External drag (e.g. .desktop file from Dolphin). Add as favorite.
+            if (!gridView.sharedFavoritesModel || !drag.hasUrls) return
+            const pos = mapToItem(gridView.contentItem, drag.x, drag.y)
+            let insertAt = gridView.indexAt(pos.x, pos.y)
+            for (const url of drag.urls) {
+                let id = url.toString()
+                // Reject anything that isn't a .desktop file. KAStats can also
+                // ingest file:// URLs but launching a .desktop is the expected
+                // favorites use case.
+                if (!id.endsWith(".desktop")) continue
+                // Strip file:// or path prefix; KAStats's normaliser accepts
+                // bare storage IDs (basename) or "applications:" form.
+                const slash = id.lastIndexOf("/")
+                if (slash >= 0) id = id.substring(slash + 1)
+                if (insertAt >= 0) {
+                    gridView.sharedFavoritesModel.addFavorite("applications:" + id, insertAt)
+                    insertAt++
+                } else {
+                    gridView.sharedFavoritesModel.addFavorite("applications:" + id)
+                }
+            }
+            drag.accept(Qt.CopyAction)
+        }
+    }
+
+    // Edge auto-scroll while dragging — proximity-driven. Closer to the
+    // viewport edge means faster scroll; eases in smoothly as the pointer
+    // crosses the zone boundary.
+    readonly property real _scrollEdge: Kirigami.Units.gridUnit * 2
+    readonly property real _scrollMinPxPerTick: 1
+    readonly property real _scrollMaxPxPerTick: Kirigami.Units.gridUnit * 0.6
+    readonly property real _scrollIntervalMs: 16 // ~60 Hz
+
+    // Two pseudo-states keep the parameters readable.
+    readonly property bool _scrollingUp: reorderArea.enabled
+        && reorderArea.containsDrag
+        && reorderArea.drag.y >= 0
+        && reorderArea.drag.y < _scrollEdge
+        && gridView.contentY > 0
+    readonly property bool _scrollingDown: reorderArea.enabled
+        && reorderArea.containsDrag
+        && reorderArea.drag.y > gridView.height - _scrollEdge
+        && reorderArea.drag.y <= gridView.height
+        && gridView.contentY < (gridView.contentHeight - gridView.height)
+
+    Timer {
+        id: edgeScrollTimer
+        interval: gridView._scrollIntervalMs
+        repeat: true
+        running: gridView._scrollingUp || gridView._scrollingDown
+        onTriggered: {
+            // Distance from the edge, clamped to the zone size.
+            const y = reorderArea.drag.y
+            const inside = gridView._scrollingUp
+                ? (gridView._scrollEdge - Math.max(0, y))
+                : (y - (gridView.height - gridView._scrollEdge))
+            const t = Math.max(0, Math.min(1, inside / gridView._scrollEdge))
+            // Quadratic easing — gentle near the boundary, snappier near edge.
+            const delta = gridView._scrollMinPxPerTick
+                + (gridView._scrollMaxPxPerTick - gridView._scrollMinPxPerTick) * t * t
+            const dir = gridView._scrollingUp ? -1 : 1
+            const next = gridView.contentY + dir * delta
+            const max = Math.max(0, gridView.contentHeight - gridView.height)
+            gridView.contentY = Math.max(0, Math.min(max, next))
+        }
+    }
+
+    // Shims kept so the reorder code can still query "is a scroll in progress".
+    QtObject {
+        id: scrollUp
+        readonly property bool running: gridView._scrollingUp
+    }
+    QtObject {
+        id: scrollDown
+        readonly property bool running: gridView._scrollingDown
     }
 }
