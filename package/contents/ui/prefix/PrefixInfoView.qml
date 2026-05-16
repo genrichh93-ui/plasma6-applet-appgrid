@@ -13,6 +13,11 @@ ColumnLayout {
     id: infoView
 
     property var sysInfo: Plasmoid.systemInfo()
+    property var sharedFavoritesModel: null
+
+    readonly property bool _migrated: Plasmoid.configuration.favoritesPortedToKAstats === true
+    readonly property int _kastatsCount: sharedFavoritesModel ? sharedFavoritesModel.count : 0
+    readonly property int _localCount: (Plasmoid.configuration.favoriteApps || []).length
 
     anchors.fill: parent
     anchors.margins: Kirigami.Units.largeSpacing * 2
@@ -74,6 +79,63 @@ ColumnLayout {
         }
     }
 
+    // -- Favorites backend status --
+    RowLayout {
+        Layout.fillWidth: true
+        Layout.topMargin: Kirigami.Units.largeSpacing
+        spacing: Kirigami.Units.largeSpacing
+
+        PlasmaComponents.Label {
+            text: i18nd("dev.xarbit.appgrid", "Favorites")
+            font.bold: true
+            opacity: 0.6
+            Layout.preferredWidth: Kirigami.Units.gridUnit * 5
+        }
+
+        PlasmaComponents.Label {
+            Layout.fillWidth: true
+            font.family: "monospace"
+            text: infoView._migrated
+                ? i18nd("dev.xarbit.appgrid", "KAStats (%1 entries; legacy backup: %2)",
+                        infoView._kastatsCount, infoView._localCount)
+                : i18nd("dev.xarbit.appgrid", "Not migrated (legacy: %1 entries)",
+                        infoView._localCount)
+            elide: Text.ElideRight
+        }
+
+        PlasmaComponents.ToolButton {
+            visible: infoView._migrated
+            icon.name: "edit-undo"
+            text: i18nd("dev.xarbit.appgrid", "Re-run migration")
+            PlasmaComponents.ToolTip.text: i18nd("dev.xarbit.appgrid",
+                "Clears the migration flag. On next open, AppGrid recomputes the "
+                + "favorites list as the union of the legacy backup and current "
+                + "KAStats entries. Nothing is lost; missing legacy items are "
+                + "re-added.")
+            PlasmaComponents.ToolTip.visible: hovered
+            PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+            onClicked: {
+                Plasmoid.configuration.favoritesPortedToKAstats = false
+                migrateHintTimer.start()
+            }
+        }
+    }
+
+    PlasmaComponents.Label {
+        Layout.fillWidth: true
+        visible: migrateHintTimer.running
+        text: i18nd("dev.xarbit.appgrid",
+            "Migration flag cleared. Reopen AppGrid to re-run the port.")
+        font: Kirigami.Theme.smallFont
+        opacity: 0.6
+        horizontalAlignment: Text.AlignRight
+    }
+
+    Timer {
+        id: migrateHintTimer
+        interval: 5000
+    }
+
     Item { Layout.fillHeight: true }
 
     PlasmaComponents.Button {
@@ -93,7 +155,10 @@ ColumnLayout {
                 "KF: " + (info.kfVersion || ""),
                 "Qt: " + (info.qtVersion || ""),
                 "OS: " + (info.os || ""),
-                "Screens: " + (info.screens || "")
+                "Screens: " + (info.screens || ""),
+                "Favorites: " + (infoView._migrated
+                    ? "KAStats (" + infoView._kastatsCount + "; backup " + infoView._localCount + ")"
+                    : "not migrated (" + infoView._localCount + ")")
             ]
             infoClipboard.text = lines.join("\n")
             infoClipboard.selectAll()

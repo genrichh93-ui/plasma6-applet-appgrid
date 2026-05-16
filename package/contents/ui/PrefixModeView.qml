@@ -20,6 +20,7 @@ Item {
     property string mode: ""
     property string argument: ""
     property Item searchField: null
+    property var sharedFavoritesModel: null
 
     signal fileOpened()
     signal directoryNavigated(string path)
@@ -44,6 +45,7 @@ Item {
     Prefix.PrefixInfoView {
         anchors.fill: parent
         visible: prefixView.mode === "info"
+        sharedFavoritesModel: prefixView.sharedFavoritesModel
     }
 
     // -- Hidden apps --

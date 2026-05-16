@@ -230,16 +230,40 @@ Kirigami.ShadowedRectangle {
     function _maybeMigrateAndMirror() {
         const item = sharedFavoritesLoader.item
         if (!item) return
-        const local = Plasmoid.configuration.favoriteApps || []
-        if (item.count < local.length && local.length > 0) {
-            // Prefix with "applications:" to match Kickoff/Kicker storage
-            // convention. portOldFavorites is the only write path that
-            // actually persists — setFavorites is a no-op upstream.
-            const prefixed = local.map(function(id) {
-                return id.indexOf(":") >= 0 ? id : "applications:" + id
-            })
-            item.portOldFavorites(prefixed)
+        if (_favoriteIdRole < 0) {
+            // Role probe hasn't resolved yet — try once it has, on the next
+            // model signal. Skip mirror; nothing useful to do.
+            return
         }
+
+        const local = Plasmoid.configuration.favoriteApps || []
+
+        // Build the union of the local backup and whatever KAStats already
+        // holds. portOldFavorites's saveOrdering OVERWRITES the stored list
+        // with the argument, so passing only the local backup would drop
+        // any favorites added later via context menu. The union preserves
+        // everything.
+        const existing = []
+        for (let i = 0; i < item.count; ++i) {
+            const v = item.data(item.index(i, 0), _favoriteIdRole)
+            if (v) existing.push(v.toString())
+        }
+        const seen = {}
+        const merged = []
+        const pushIfNew = function(id) {
+            const prefixed = id.indexOf(":") >= 0 ? id : "applications:" + id
+            if (seen[prefixed]) return
+            seen[prefixed] = true
+            merged.push(prefixed)
+        }
+        // Existing KAStats entries first to preserve their order, then any
+        // local-only ones appended at the end.
+        existing.forEach(pushIfNew)
+        local.forEach(pushIfNew)
+
+        if (merged.length > item.count)
+            item.portOldFavorites(merged)
+
         panel._mirrorFavorites()
     }
 
@@ -597,6 +621,7 @@ Kirigami.ShadowedRectangle {
             mode: panel.prefixMode
             argument: panel.prefixArgument
             searchField: searchBar.field
+            sharedFavoritesModel: panel.sharedFavoritesModel
             onFileOpened: panel.closeRequested()
             onDirectoryNavigated: function(path) {
                 searchBar.text = path
