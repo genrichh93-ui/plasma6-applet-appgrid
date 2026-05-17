@@ -329,7 +329,8 @@ jobs:
             docker.io/openmandriva/cooker bash -c '
               set -e
               dnf install -y \
-                cmake extra-cmake-modules gcc-c++ \
+                cmake extra-cmake-modules gcc-c++ make \
+                glibc-devel lib64stdc++-devel \
                 lib64Qt6Core-devel lib64Qt6Gui-devel lib64Qt6Quick-devel \
                 lib64Qt6Qml-devel lib64Qt6Network-devel lib64Qt6DBus-devel \
                 lib64Plasma-devel lib64PlasmaActivities-devel \
