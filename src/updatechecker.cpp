@@ -17,7 +17,6 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QSysInfo>
-#include <QTimer>
 #include <QUrl>
 
 namespace {
@@ -28,15 +27,9 @@ namespace {
 constexpr auto kManifestUrl = QLatin1StringView(
     "https://appgrid.xarbit.dev/api/latest.json");
 
-// Throttle: at most one network request per 24h, even if the user opens the
-// grid dozens of times. Forced checks (checkNow) bypass.
-constexpr qint64 kThrottleSeconds = 24 * 60 * 60;
-
-// Delay before the first network request after the checker is enabled.
-// We want the plasmoid to be up + responsive before any background work
-// fires; 30 s is past the typical Plasma startup spike and beyond the
-// user's immediate-after-login click window.
-constexpr int kInitialDelayMs = 30 * 1000;
+// Re-check interval while enabled. Long-running sessions still pick up new
+// releases without needing a Plasma restart.
+constexpr int kPeriodicCheckMs = 24 * 60 * 60 * 1000;
 } // namespace
 
 // On-disk state lives in the per-user cache dir so it never bloats config.
@@ -51,9 +44,12 @@ UpdateChecker::UpdateChecker(const QString &currentVersion, QObject *parent)
     , m_currentVersion(currentVersion)
 {
     loadState();
+    m_periodicTimer.setInterval(kPeriodicCheckMs);
+    connect(&m_periodicTimer, &QTimer::timeout, this, [this]() {
+        runCheck(/*force=*/false);
+    });
     // We don't auto-fire on construction — the QML side flips `enabled`
-    // when the config is on, and that triggers the first check via
-    // scheduleCheckIfDue().
+    // when the config is on, and that triggers the first check.
 }
 
 UpdateChecker::~UpdateChecker() = default;
@@ -64,8 +60,16 @@ void UpdateChecker::setEnabled(bool enabled)
         return;
     m_enabled = enabled;
     emit enabledChanged();
-    if (enabled)
-        scheduleCheckIfDue();
+    if (enabled) {
+        // Immediate check on enable so the indicator reflects reality,
+        // not whatever the cache file said at construction. Async, never
+        // blocks the UI thread.
+        runCheck(/*force=*/true);
+        // Long-running sessions keep getting updates via the periodic timer.
+        m_periodicTimer.start();
+    } else {
+        m_periodicTimer.stop();
+    }
 }
 
 void UpdateChecker::checkNow()
@@ -77,22 +81,6 @@ void UpdateChecker::openReleasePage()
 {
     if (!m_releaseUrl.isEmpty())
         QDesktopServices::openUrl(QUrl(m_releaseUrl));
-}
-
-void UpdateChecker::scheduleCheckIfDue()
-{
-    if (!m_enabled)
-        return;
-    if (m_lastCheck.isValid()
-            && m_lastCheck.secsTo(QDateTime::currentDateTimeUtc()) < kThrottleSeconds) {
-        return; // honor the 24h throttle
-    }
-    // Defer the network request so we never compete with plasmoid load /
-    // first-paint. Fires once, asynchronously; the reply itself is handled
-    // off the UI thread by QNetworkAccessManager so nothing blocks.
-    QTimer::singleShot(kInitialDelayMs, this, [this]() {
-        runCheck(/*force=*/false);
-    });
 }
 
 void UpdateChecker::runCheck(bool force)

@@ -26,8 +26,12 @@ RowLayout {
     PlasmaComponents.ToolButton {
         id: updateButton
         visible: Plasmoid.updateChecker !== null
+                 && Plasmoid.updateChecker.enabled
                  && Plasmoid.updateChecker.hasUpdate
         icon.name: "system-software-update"
+        // Tint the update icon with Kirigami's neutral (attention) color so
+        // it stands out from the monochrome session buttons next to it.
+        icon.color: Kirigami.Theme.neutralTextColor
         text: powerButtons.showLabels
               ? i18nd("dev.xarbit.appgrid", "Update available")
               : ""

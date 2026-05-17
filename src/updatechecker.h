@@ -8,6 +8,7 @@
 #include <QDateTime>
 #include <QObject>
 #include <QPointer>
+#include <QTimer>
 
 class QNetworkAccessManager;
 
@@ -55,7 +56,6 @@ Q_SIGNALS:
     void enabledChanged();
 
 private:
-    void scheduleCheckIfDue();
     void runCheck(bool force);
     void handleReply(class QNetworkReply *reply);
     void loadState();
@@ -72,4 +72,8 @@ private:
     bool m_hasUpdate = false;
     bool m_enabled = false;
     QPointer<QNetworkAccessManager> m_network;
+    // Periodic re-check while enabled — fires every 24h so long-running
+    // sessions still pick up new releases. Stopped on setEnabled(false),
+    // restarted on setEnabled(true).
+    QTimer m_periodicTimer;
 };
