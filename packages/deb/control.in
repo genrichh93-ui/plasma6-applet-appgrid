@@ -4,7 +4,7 @@ Section: kde
 Priority: optional
 Architecture: ${DEB_ARCH}
 Depends: plasma-workspace, plasma-desktop, libkf6service6, libkf6i18n6
-Maintainer: Jason Scurtu <jscurtu@gmail.com>
+Maintainer: Jason Scurtu <code@xarbit.dev>
 Description: A modern fullscreen application launcher for KDE Plasma
  A modern fullscreen application launcher for KDE Plasma,
  inspired by macOS Launchpad and COSMIC.

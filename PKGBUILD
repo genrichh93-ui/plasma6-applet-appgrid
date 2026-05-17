@@ -1,4 +1,4 @@
-# Maintainer: Jason Scurtu <jscurtu@gmail.com>
+# Maintainer: Jason Scurtu <code@xarbit.dev>
 pkgname=plasma6-applets-appgrid
 pkgver=1.8.0
 pkgrel=1
