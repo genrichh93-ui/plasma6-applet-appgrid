@@ -703,6 +703,11 @@ Kirigami.ShadowedRectangle {
                 showDividers: panel.cfgShowDividers
                 showTooltips: panel.cfgShowTooltips
                 showNewAppBadge: panel.cfgShowNewAppBadge
+                // Same shared DragSource as AppGridView so drag-to-favorites
+                // / drag-to-taskbar / drag-to-Dolphin all work from the
+                // by-category view too.
+                dragSource: panel.appletInterface
+                                    ? panel.appletInterface.dragSource : null
                 showRecents: panel.cfgShowRecentApps
                              && panel.appsModel
                              && panel.appsModel.recentApps.length > 0

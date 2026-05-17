@@ -26,6 +26,10 @@ Flickable {
     property bool showTooltips: true
     property bool showNewAppBadge: true
     property Item searchField: null
+    // Shared DragSource from the plasmoid root; wired by GridPanel so that
+    // icons in the by-category view can be dragged to the panel taskbar,
+    // Dolphin, the favorites tab, etc. — matching AppGridView's behavior.
+    property DragSource dragSource: null
 
     signal launched(int proxyIndex)
     signal recentLaunched(string storageId)
@@ -264,6 +268,12 @@ Flickable {
                                 isCurrentItem: categoryGrid.currentIndex === parent.flatIndex
                                 isNew: categoryGrid.showNewAppBadge && categoryGrid.appsModel
                                     ? categoryGrid.appsModel.isNewApp(modelData.storageId || "") : false
+                                // Hook each icon into the shared DragSource so the
+                                // user can drag apps out to the taskbar / Dolphin /
+                                // favorites just like in the alphabetic / sorted view.
+                                storageId: modelData.storageId || ""
+                                desktopFile: modelData.desktopFile || ""
+                                dragSource: categoryGrid.dragSource
                                 onClicked: function(mouse) {
                                     if (mouse.button === Qt.RightButton)
                                         categoryGrid.contextMenuRequested(modelData.proxyIndex, modelData.storageId || "", modelData.desktopFile || "")
