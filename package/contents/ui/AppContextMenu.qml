@@ -90,6 +90,55 @@ PlasmaComponents.Menu {
         popup()
     }
 
+    // -- Bulk-action helpers: each iterates popupSelectedSids and runs an
+    // operation, idempotently. Kept here (rather than inlined on every
+    // MenuItem) so the visible items stay declarative and the action
+    // semantics live in one place.
+
+    function _desktopFileFor(sid) {
+        if (!appsModel || !sid) return ""
+        const a = appsModel.getByStorageId(sid)
+        return (a && a.desktopFile) ? a.desktopFile : ""
+    }
+
+    function _bulkAddLauncher(target) {
+        if (!appsModel || !appletInterface) return
+        const sids = popupSelectedSids
+        for (var i = 0; i < sids.length; ++i) {
+            const df = _desktopFileFor(sids[i])
+            if (df) containmentInterface.addLauncher(appletInterface, target, df)
+        }
+    }
+
+    function _bulkSetFavorite(addNotRemove) {
+        if (!sharedFavoritesModel) return
+        const sids = popupSelectedSids
+        for (var i = 0; i < sids.length; ++i) {
+            const prefixed = FavoriteId.toPrefixed(sids[i])
+            const isFav = sharedFavoritesModel.isFavorite(prefixed)
+            if (addNotRemove && !isFav)
+                sharedFavoritesModel.addFavorite(prefixed)
+            else if (!addNotRemove && isFav)
+                sharedFavoritesModel.removeFavorite(prefixed)
+        }
+    }
+
+    function _copySelectedPaths() {
+        const sids = popupSelectedSids
+        var paths = []
+        for (var i = 0; i < sids.length; ++i) {
+            const df = _desktopFileFor(sids[i])
+            if (df) paths.push(df)
+        }
+        // Hidden TextEdit clipboard sink — same pattern as PrefixInfoView,
+        // sidesteps QtQuick.Dialogs / Clipboard plugin imports.
+        bulkPathClipboard.text = paths.join("\n")
+        bulkPathClipboard.selectAll()
+        bulkPathClipboard.copy()
+    }
+
+    TextEdit { id: bulkPathClipboard; visible: false }
+
     // -- Application-defined actions (jumplist) --
     Repeater {
         model: contextMenu.popupActions
@@ -123,15 +172,7 @@ PlasmaComponents.Menu {
         height: visible ? implicitHeight : 0
         enabled: !(contextMenu.appletInterface
                    && contextMenu.appletInterface.isDragInFlight)
-        onClicked: {
-            if (!contextMenu.sharedFavoritesModel) return
-            const sids = contextMenu.popupSelectedSids
-            for (var i = 0; i < sids.length; ++i) {
-                const prefixed = FavoriteId.toPrefixed(sids[i])
-                if (!contextMenu.sharedFavoritesModel.isFavorite(prefixed))
-                    contextMenu.sharedFavoritesModel.addFavorite(prefixed)
-            }
-        }
+        onClicked: contextMenu._bulkSetFavorite(true)
         Accessible.name: text
         Accessible.role: Accessible.MenuItem
     }
@@ -150,15 +191,7 @@ PlasmaComponents.Menu {
         height: visible ? implicitHeight : 0
         enabled: !(contextMenu.appletInterface
                    && contextMenu.appletInterface.isDragInFlight)
-        onClicked: {
-            if (!contextMenu.sharedFavoritesModel) return
-            const sids = contextMenu.popupSelectedSids
-            for (var i = 0; i < sids.length; ++i) {
-                const prefixed = FavoriteId.toPrefixed(sids[i])
-                if (contextMenu.sharedFavoritesModel.isFavorite(prefixed))
-                    contextMenu.sharedFavoritesModel.removeFavorite(prefixed)
-            }
-        }
+        onClicked: contextMenu._bulkSetFavorite(false)
         Accessible.name: text
         Accessible.role: Accessible.MenuItem
     }
@@ -176,17 +209,7 @@ PlasmaComponents.Menu {
                      contextMenu.popupSelectedSids.length)
         visible: contextMenu.isMultiSelect
         height: visible ? implicitHeight : 0
-        onClicked: {
-            if (!contextMenu.appsModel) return
-            const sids = contextMenu.popupSelectedSids
-            for (var i = 0; i < sids.length; ++i) {
-                const a = contextMenu.appsModel.getByStorageId(sids[i])
-                if (a && a.desktopFile) {
-                    containmentInterface.addLauncher(contextMenu.appletInterface,
-                        Kicker.ContainmentInterface.TaskManager, a.desktopFile)
-                }
-            }
-        }
+        onClicked: contextMenu._bulkAddLauncher(Kicker.ContainmentInterface.TaskManager)
         Accessible.name: text
         Accessible.role: Accessible.MenuItem
     }
@@ -198,17 +221,7 @@ PlasmaComponents.Menu {
                      contextMenu.popupSelectedSids.length)
         visible: contextMenu.isMultiSelect
         height: visible ? implicitHeight : 0
-        onClicked: {
-            if (!contextMenu.appsModel) return
-            const sids = contextMenu.popupSelectedSids
-            for (var i = 0; i < sids.length; ++i) {
-                const a = contextMenu.appsModel.getByStorageId(sids[i])
-                if (a && a.desktopFile) {
-                    containmentInterface.addLauncher(contextMenu.appletInterface,
-                        Kicker.ContainmentInterface.Desktop, a.desktopFile)
-                }
-            }
-        }
+        onClicked: contextMenu._bulkAddLauncher(Kicker.ContainmentInterface.Desktop)
         Accessible.name: text
         Accessible.role: Accessible.MenuItem
     }
@@ -237,25 +250,9 @@ PlasmaComponents.Menu {
                      contextMenu.popupSelectedSids.length)
         visible: contextMenu.isMultiSelect
         height: visible ? implicitHeight : 0
-        onClicked: {
-            if (!contextMenu.appsModel) return
-            var paths = []
-            const sids = contextMenu.popupSelectedSids
-            for (var i = 0; i < sids.length; ++i) {
-                const a = contextMenu.appsModel.getByStorageId(sids[i])
-                if (a && a.desktopFile) paths.push(a.desktopFile)
-            }
-            // Hidden TextEdit reused from PrefixInfoView's clipboard pattern —
-            // simplest cross-platform copy path in QML without pulling in
-            // QtQuick.Dialogs / Clipboard plugins.
-            bulkPathClipboard.text = paths.join("\n")
-            bulkPathClipboard.selectAll()
-            bulkPathClipboard.copy()
-        }
+        onClicked: contextMenu._copySelectedPaths()
         Accessible.name: text
         Accessible.role: Accessible.MenuItem
-
-        TextEdit { id: bulkPathClipboard; visible: false }
     }
 
     PlasmaComponents.MenuItem {

@@ -61,6 +61,14 @@ Kirigami.ShadowedRectangle {
     readonly property bool showAppGrid: !isSearching && !isPrefixMode && !showCategoryGrid
     readonly property bool showSearchResults: isSearching && !isPrefixMode
 
+    // Whichever grid view currently owns a SelectionState — used to route
+    // menu-driven selection toggles. Search and prefix views resolve to
+    // null because they don't host multi-select; callers treat that as a
+    // silent no-op.
+    readonly property var activeMultiSelectView: showAppGrid ? appGrid
+                                              : showCategoryGrid ? categoryGridView
+                                              : null
+
     // -- Icon size mapping (0=Small/medium, 1=Medium/large, 2=Large/huge) --
     readonly property real gridIconSize: {
         var preset = Plasmoid.configuration.iconSize
@@ -821,13 +829,13 @@ Kirigami.ShadowedRectangle {
             bulkHideDialog.open()
         }
 
-        // Route the single-menu "Add to selection" / "Remove from selection"
-        // item to whichever grid is currently showing. Search results and
-        // recents don't own a SelectionState; they simply ignore the toggle.
+        // Route the menu's "Add / Remove from Selection" item to whichever
+        // grid currently owns the selection state. Resolved via the
+        // panel.activeMultiSelectView binding — search results and recents
+        // resolve to null, so the toggle silently no-ops there.
         onToggleSelectionRequested: function(sid) {
-            if (!sid) return
-            if (panel.showAppGrid) appGrid.toggleSelectionBySid(sid)
-            else if (panel.showCategoryGrid) categoryGridView.toggleSelectionBySid(sid)
+            const v = panel.activeMultiSelectView
+            if (v && sid) v.toggleSelectionBySid(sid)
         }
     }
 
