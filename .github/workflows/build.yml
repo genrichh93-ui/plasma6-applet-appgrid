@@ -440,6 +440,16 @@ jobs:
       - name: List packages
         run: find artifacts -type f | sort
 
+      # SHA256 sidecars next to every .rpm/.deb so the website (and end
+      # users) can verify downloads. Universal already ships its own
+      # .tar.gz.sha256 via build-package.sh — skip .tar.gz here.
+      - name: Generate SHA256 sidecars for distro packages
+        run: |
+          set -e
+          find artifacts -type f \( -name '*.rpm' -o -name '*.deb' \) | while read -r f; do
+            ( cd "$(dirname "$f")" && sha256sum "$(basename "$f")" > "$(basename "$f").sha256" )
+          done
+
       - name: Delete previous dev release
         run: gh release delete latest --yes --cleanup-tag || true
         env:

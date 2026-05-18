@@ -49,6 +49,27 @@ PLASMA_ENV_FILE = PLASMA_ENV_DIR / "appgrid-user-local.sh"
 # Allowlist of absolute paths uninstall is permitted to touch. Tampered
 # MANIFEST entries pointing anywhere else are rejected.
 ALLOWED_ABS_EXTRAS = frozenset({PLASMA_ENV_FILE})
+
+# System-wide locations that an existing distro-packaged AppGrid lands
+# in. Plasma scans both system and user plasmoid dirs; if it finds the
+# applet ID twice it picks whichever its discovery hits first, which is
+# usually the system one — leaving the user on the old version and
+# defeating the universal install. We refuse to overwrite this footgun.
+SYSTEM_APPGRID_PATHS = (
+    Path("/usr/share/plasma/plasmoids/dev.xarbit.appgrid"),
+    Path("/usr/share/plasma/plasmoids/dev.xarbit.appgrid.panel"),
+)
+
+# Per-distro-family hint for the uninstall command. Keyed by the table
+# name in distros.toml — unknown names fall through to the generic list.
+UNINSTALL_HINTS = {
+    "arch":         "sudo pacman -R plasma6-applets-appgrid",
+    "fedora":       "sudo dnf remove plasma-applet-appgrid",
+    "openmandriva": "sudo dnf remove plasma-applet-appgrid",
+    "debian":       "sudo apt remove plasma-applet-appgrid",
+    "opensuse":     "sudo zypper remove plasma6-applet-appgrid",
+    "gentoo":       "sudo emerge -C kde-misc/plasma6-applet-appgrid",
+}
 PLASMA_ENV_CONTENT = """\
 #!/bin/sh
 # SPDX-FileCopyrightText: 2026 AppGrid Contributors
@@ -187,6 +208,44 @@ def detect_distro(distros: dict[str, dict]) -> tuple[str, dict]:
                     return result
 
     return "generic", distros.get("generic", {})
+
+
+def system_appgrid_present() -> list[Path]:
+    """Return the subset of SYSTEM_APPGRID_PATHS that exist on disk."""
+    return [p for p in SYSTEM_APPGRID_PATHS if p.exists()]
+
+
+def warn_on_system_install(name: str, *, allow_coexist: bool) -> None:
+    """Refuse the install (or warn) when a distro package is already on
+    the system. Plasma can't reliably load two copies of the same applet
+    ID — see SYSTEM_APPGRID_PATHS comment."""
+    found = system_appgrid_present()
+    if not found:
+        return
+    info()
+    info("error: AppGrid is already installed system-wide via your package manager:")
+    for p in found:
+        info(f"  - {p}")
+    info()
+    info("Plasma can't reliably load two copies of the same applet ID — please")
+    info("remove the system package first so the universal install can take over.")
+    info()
+    hint = UNINSTALL_HINTS.get(name)
+    if hint:
+        info("Suggested for your distro:")
+        info(f"  {hint}")
+    else:
+        info("Try one of these (whichever package manager your distro uses):")
+        for h in dict.fromkeys(UNINSTALL_HINTS.values()):
+            info(f"  {h}")
+    info()
+    if allow_coexist:
+        info("--allow-coexist set; proceeding anyway. Plasma may still load the")
+        info("system copy on next session start.")
+        info()
+        return
+    info("Rerun with --allow-coexist to proceed anyway (not recommended).")
+    sys.exit(2)
 
 
 def plasma_present() -> bool:
@@ -414,6 +473,9 @@ def main() -> int:
                         help="on upgrade, restart plasmashell after install")
     parser.add_argument("--dry-run", action="store_true",
                         help="print what would happen without writing files")
+    parser.add_argument("--allow-coexist", action="store_true",
+                        help="install on top of a system-wide distro package "
+                             "(not recommended — Plasma may load the system copy)")
     args = parser.parse_args()
 
     refuse_if_root()
@@ -430,6 +492,10 @@ def main() -> int:
 
     name, table = detect_distro(distros)
     info(f"Detected: {table.get('display', name)}")
+
+    # Bail before doing anything when a distro package is already installed.
+    # We pass `name` so we can suggest the right uninstall command.
+    warn_on_system_install(name, allow_coexist=args.allow_coexist)
 
     if not plasma_present():
         info()

@@ -308,9 +308,25 @@ jobs:
       - name: List packages
         run: find artifacts -type f | sort
 
+      # Generate SHA256 sidecars next to every .rpm and .deb so the website
+      # (and end users) can verify downloads. Universal already ships its
+      # own .tar.gz.sha256 via build-package.sh, so we skip .tar.gz here.
+      - name: Generate SHA256 sidecars for distro packages
+        run: |
+          set -e
+          find artifacts -type f \( -name '*.rpm' -o -name '*.deb' \) | while read -r f; do
+            ( cd "$(dirname "$f")" && sha256sum "$(basename "$f")" > "$(basename "$f").sha256" )
+          done
+          echo "=== sidecars created ==="
+          find artifacts -type f -name '*.sha256' | sort
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          # Mark as pre-release when the tag is an rc / beta / alpha. The
+          # website's stable / pre-release channel toggle keys off this flag
+          # via GitHub's `prerelease` field.
+          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-alpha') }}
           files: |
             artifacts/*
