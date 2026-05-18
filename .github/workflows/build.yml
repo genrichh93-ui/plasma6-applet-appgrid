@@ -231,7 +231,12 @@ jobs:
           export PKG_VERSION=$(echo "$APP_VERSION" | sed 's/-/_/g; s/+.*//')
           export PKG_RELEASE=1
           export APP_VERSION
-          envsubst < packages/buildpkg/PKGBUILD.in > ./PKGBUILD
+          # Restrict envsubst to OUR placeholders only — without the
+          # variable list it would also expand $startdir / $pkgdir
+          # (referenced inside PKGBUILD's build() / package() functions)
+          # to empty strings at render time, breaking the build.
+          envsubst '$PKG_VERSION $PKG_RELEASE $APP_VERSION' \
+            < packages/buildpkg/PKGBUILD.in > ./PKGBUILD
           # makepkg needs to read+write the repo, so hand it over to the
           # non-root builder user we created above.
           chown -R builder:builder .
