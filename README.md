@@ -1,6 +1,6 @@
 # AppGrid — KDE Plasma 6 Application Launcher
 
-> **🧪 Release candidate: `v1.8.0-rc.1`** — universal package for immutable distros, opt-in in-app update checker, by-category drag-and-drop, hardened installer. Please [report regressions](https://github.com/xarbit/plasma6-applet-appgrid/issues) before 1.8.0 stable ships. Type `i:` in the search bar to copy your system info for a report.
+> **🧪 Release candidate: `v1.8.0-rc.2`** — universal package for immutable distros, opt-in in-app update checker, by-category drag-and-drop, hardened installer. Please [report regressions](https://github.com/xarbit/plasma6-applet-appgrid/issues) before 1.8.0 stable ships. Type `i:` in the search bar to copy your system info for a report.
 
 A grid-style application launcher for KDE Plasma 6, inspired by macOS Launchpad, COSMIC, and Pantheon. Ships as two plasmoids — a standalone centered popup (**AppGrid**) and a native Plasma panel popup (**AppGrid Panel**) — both sharing the same grid, search, categories, and config.
 
