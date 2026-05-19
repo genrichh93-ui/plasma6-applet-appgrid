@@ -7,9 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: https://github.com/xarbit/plasma6-applet-appgrid/"
-"issues\n"
-"POT-Creation-Date: 2026-05-19 14:58+0200\n"
+"Report-Msgid-Bugs-To: https://github.com/xarbit/plasma6-applet-appgrid/issues\n"
+"POT-Creation-Date: 2026-05-19 16:33+0200\n"
 "PO-Revision-Date: 2026-03-18 19:51+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,97 +16,96 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.6\n"
 
-#: package/contents/ui/AppContextMenu.qml:156
+#: package/contents/ui/AppContextMenu.qml:158
 msgid "Remove from Favorites"
 msgstr "Убрать из избранного"
 
-#: package/contents/ui/AppContextMenu.qml:157
+#: package/contents/ui/AppContextMenu.qml:159
 msgid "Add to Favorites"
 msgstr "Добавить в избранное"
 
-#: package/contents/ui/AppContextMenu.qml:174
-#: package/contents/ui/AppContextMenu.qml:298
+#: package/contents/ui/AppContextMenu.qml:176
+#: package/contents/ui/AppContextMenu.qml:300
 msgid "Remove from Selection"
 msgstr "Убрать из выбора"
 
-#: package/contents/ui/AppContextMenu.qml:175
+#: package/contents/ui/AppContextMenu.qml:177
 msgid "Add to Selection"
 msgstr "Добавить к выбору"
 
-#: package/contents/ui/AppContextMenu.qml:183
+#: package/contents/ui/AppContextMenu.qml:185
 msgid "Pin to Task Manager"
 msgstr "Закрепить на панели задач"
 
-#: package/contents/ui/AppContextMenu.qml:192
+#: package/contents/ui/AppContextMenu.qml:194
 msgid "Add to Desktop"
 msgstr "Добавить значок на рабочий стол"
 
-#: package/contents/ui/AppContextMenu.qml:201
+#: package/contents/ui/AppContextMenu.qml:203
 msgid "Edit Application"
 msgstr "Изменить приложение"
 
-#: package/contents/ui/AppContextMenu.qml:209
+#: package/contents/ui/AppContextMenu.qml:211
 msgid "Hide Application"
 msgstr "Скрыть приложение"
 
-#: package/contents/ui/AppContextMenu.qml:228
+#: package/contents/ui/AppContextMenu.qml:230
 msgid "Add %1 to Favorites"
 msgid_plural "Add %1 to Favorites"
 msgstr[0] "Добавить %1 в избранное"
 msgstr[1] "Добавить %1 в избранное"
 msgstr[2] "Добавить %1 в избранное"
 
-#: package/contents/ui/AppContextMenu.qml:242
+#: package/contents/ui/AppContextMenu.qml:244
 msgid "Remove %1 from Favorites"
 msgid_plural "Remove %1 from Favorites"
 msgstr[0] "Удалить %1 из избранного"
 msgstr[1] "Удалить %1 из избранного"
 msgstr[2] "Удалить %1 из избранного"
 
-#: package/contents/ui/AppContextMenu.qml:255
+#: package/contents/ui/AppContextMenu.qml:257
 msgid "Pin %1 to Task Manager"
 msgid_plural "Pin %1 to Task Manager"
 msgstr[0] "Закрепить %1 на панели задач"
 msgstr[1] "Закрепить %1 на панели задач"
 msgstr[2] "Закрепить %1 на панели задач"
 
-#: package/contents/ui/AppContextMenu.qml:263
+#: package/contents/ui/AppContextMenu.qml:265
 msgid "Add %1 to Desktop"
 msgid_plural "Add %1 to Desktop"
 msgstr[0] "Добавить %1 на рабочий стол"
 msgstr[1] "Добавить %1 на рабочий стол"
 msgstr[2] "Добавить %1 на рабочий стол"
 
-#: package/contents/ui/AppContextMenu.qml:271
+#: package/contents/ui/AppContextMenu.qml:273
 msgid "Launch %1 application"
 msgid_plural "Launch %1 applications"
 msgstr[0] "Запустить %1 приложение"
 msgstr[1] "Запустить %1 приложения"
 msgstr[2] "Запустить %1 приложений"
 
-#: package/contents/ui/AppContextMenu.qml:281
+#: package/contents/ui/AppContextMenu.qml:283
 msgid "Copy %1 path"
 msgid_plural "Copy %1 paths"
 msgstr[0] "Копировать путь %1"
 msgstr[1] "Копировать пути %1"
 msgstr[2] "Копировать путей %1"
 
-#: package/contents/ui/AppContextMenu.qml:289
+#: package/contents/ui/AppContextMenu.qml:291
 msgid "Hide %1 application"
 msgid_plural "Hide %1 applications"
 msgstr[0] "Скрыть %1 приложение"
 msgstr[1] "Скрыть %1 приложения"
 msgstr[2] "Скрыть %1 приложений"
 
-#: package/contents/ui/AppIconDelegate.qml:213
+#: package/contents/ui/AppIconDelegate.qml:216
 msgid "new"
 msgstr "создать"
 
-#: package/contents/ui/AppIconDelegate.qml:214
+#: package/contents/ui/AppIconDelegate.qml:217
 msgid "selected"
 msgstr "выбрано"
 
@@ -245,191 +243,192 @@ msgstr "Скрывать пустые категории"
 msgid "Check the AppGrid website for new releases"
 msgstr "Проверять сайт AppGrid на новые выпуски"
 
-#: package/contents/ui/ConfigGeneral.qml:255
+#: package/contents/ui/ConfigGeneral.qml:254
 msgid ""
-"Anonymous request once per day to https://appgrid.xarbit.dev/api/"
-"latest.json. "
+"Anonymous request once per day to %1. Shows an indicator near the session "
+"buttons when a new version is available; no automatic install."
 msgstr ""
-"Анонимный запрос раз в сутки на https://appgrid.xarbit.dev/api/latest.json. "
+"Анонимный запрос раз в день к %1. Показывает индикатор рядом с кнопками "
+"сеанса, когда доступна новая версия; без автоматической установки."
 
-#: package/contents/ui/ConfigGeneral.qml:264
+#: package/contents/ui/ConfigGeneral.qml:261
 msgid "Terminal shell:"
 msgstr "Оболочка терминала:"
 
-#: package/contents/ui/ConfigGeneral.qml:268
+#: package/contents/ui/ConfigGeneral.qml:265
 msgid "Default (/bin/sh)"
 msgstr "По умолчанию (/bin/sh)"
 
-#: package/contents/ui/ConfigGeneral.qml:288
+#: package/contents/ui/ConfigGeneral.qml:285
 msgid "Appearance:"
 msgstr "Внешний вид:"
 
-#: package/contents/ui/ConfigGeneral.qml:289
+#: package/contents/ui/ConfigGeneral.qml:286
 msgid "Show divider lines"
 msgstr "Показывать разделительные линии"
 
-#: package/contents/ui/ConfigGeneral.qml:294
+#: package/contents/ui/ConfigGeneral.qml:291
 msgid "Show scrollbars"
 msgstr "Показать полосы прокрутки"
 
-#: package/contents/ui/ConfigGeneral.qml:299
+#: package/contents/ui/ConfigGeneral.qml:296
 msgid "Show tooltips on hover"
 msgstr "Показывать подсказки при наведении"
 
-#: package/contents/ui/ConfigGeneral.qml:304
+#: package/contents/ui/ConfigGeneral.qml:301
 msgid "Show new app badge"
 msgstr "Показывать значок новых приложений"
 
-#: package/contents/ui/ConfigGeneral.qml:309
+#: package/contents/ui/ConfigGeneral.qml:306
 msgid "Hide app labels on favorites tab"
 msgstr "Скрывать названия приложений на вкладке избранного"
 
-#: package/contents/ui/ConfigGeneral.qml:315
+#: package/contents/ui/ConfigGeneral.qml:312
 msgid "Sort favorites alphabetically"
 msgstr "Сортировать избранное по алфавиту"
 
-#: package/contents/ui/ConfigGeneral.qml:320
+#: package/contents/ui/ConfigGeneral.qml:317
 msgid "Open/close animation:"
 msgstr "Анимация открытия/закрытия:"
 
-#: package/contents/ui/ConfigGeneral.qml:321
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:318
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "None"
 msgstr "Отключена"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Fade"
 msgstr "Затухание"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Scale"
 msgstr "Масштаб"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Pop"
 msgstr "Хлопок"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slide Up"
 msgstr "Сдвиг вверх"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slide Down"
 msgstr "Сдвиг вниз"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Glide"
 msgstr "Скольжение"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Buzz"
 msgstr "Вибрация"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Twist"
 msgstr "Поворот"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slam"
 msgstr "Удар"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Grow Up"
 msgstr "Рост вверх"
 
-#: package/contents/ui/ConfigGeneral.qml:326
+#: package/contents/ui/ConfigGeneral.qml:323
 msgid "Enable background blur"
 msgstr "Включить размытие фона"
 
-#: package/contents/ui/ConfigGeneral.qml:331
+#: package/contents/ui/ConfigGeneral.qml:328
 msgid "Dim background behind launcher"
 msgstr "Затемнять фон за лаунчером"
 
-#: package/contents/ui/ConfigGeneral.qml:336
+#: package/contents/ui/ConfigGeneral.qml:333
 msgid "Icon animation:"
 msgstr "Анимация иконок:"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Shake"
 msgstr "Тряска"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Grow"
 msgstr "Увеличение"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Bounce"
 msgstr "Подпрыгивание"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Spin"
 msgstr "Вращение"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Shuffle"
 msgstr "Перемешать"
 
-#: package/contents/ui/ConfigGeneral.qml:342
+#: package/contents/ui/ConfigGeneral.qml:339
 msgid "Animate icons on open"
 msgstr "Анимировать иконки при открытии"
 
-#: package/contents/ui/ConfigGeneral.qml:348
+#: package/contents/ui/ConfigGeneral.qml:345
 msgid "Show power/session buttons"
 msgstr "Показывать кнопки питания/сеанса"
 
-#: package/contents/ui/ConfigGeneral.qml:353
+#: package/contents/ui/ConfigGeneral.qml:350
 msgid "Show labels on power/session buttons"
 msgstr "Подписи кнопок управления питанием/сеансами"
 
-#: package/contents/ui/ConfigGeneral.qml:359
+#: package/contents/ui/ConfigGeneral.qml:356
 msgid "Expand search to bookmarks, files, and websites"
 msgstr "Расширить поиск на закладки, файлы и вебсайты"
 
-#: package/contents/ui/ConfigGeneral.qml:363
+#: package/contents/ui/ConfigGeneral.qml:360
 msgid "Configure Search Plugins…"
 msgstr "Настроить модули поиска…"
 
-#: package/contents/ui/ConfigGeneral.qml:370
+#: package/contents/ui/ConfigGeneral.qml:367
 msgid "Background opacity:"
 msgstr "Прозрачность фона:"
 
-#: package/contents/ui/ConfigGeneral.qml:386
+#: package/contents/ui/ConfigGeneral.qml:383
 msgid "Corner radius:"
 msgstr "Радиус скругления:"
 
-#: package/contents/ui/ConfigGeneral.qml:387
+#: package/contents/ui/ConfigGeneral.qml:384
 msgid "Use custom corner radius"
 msgstr "Использовать свой радиус скругления"
 
-#: package/contents/ui/ConfigGeneral.qml:399
+#: package/contents/ui/ConfigGeneral.qml:396
 msgid "px"
 msgstr "px"
 
-#: package/contents/ui/ConfigGeneral.qml:411
+#: package/contents/ui/ConfigGeneral.qml:408
 msgid "Reset to Defaults"
 msgstr "Сбросить настройки"
 
-#: package/contents/ui/ConfigGeneral.qml:455
+#: package/contents/ui/ConfigGeneral.qml:452
 msgid "Hidden apps:"
 msgstr "Скрытые приложения:"
 
-#: package/contents/ui/ConfigGeneral.qml:462
+#: package/contents/ui/ConfigGeneral.qml:459
 msgid ""
 "Right-click any app in the grid to hide it, or type h: in the search bar."
 msgstr ""
 "Щёлкните правой кнопкой по приложению в сетке, чтобы скрыть, или введите h: "
 "в строке поиска."
 
-#: package/contents/ui/ConfigGeneral.qml:469
+#: package/contents/ui/ConfigGeneral.qml:466
 msgid "No hidden applications."
 msgstr "Нет скрытых приложений."
 
-#: package/contents/ui/ConfigGeneral.qml:515
+#: package/contents/ui/ConfigGeneral.qml:512
 #: package/contents/ui/prefix/PrefixHiddenView.qml:127
 msgid "Unhide"
 msgstr "Показать"
 
-#: package/contents/ui/ConfigGeneral.qml:532
+#: package/contents/ui/ConfigGeneral.qml:529
 #: package/contents/ui/prefix/PrefixHiddenView.qml:35
 msgid "Unhide All"
 msgstr "Показать все"
@@ -457,8 +456,8 @@ msgid_plural ""
 "Hide %1 applications from AppGrid? You can unhide them later in Settings → "
 "Hidden Applications."
 msgstr[0] ""
-"Скрыть %1 приложение из AppGrid? Вы можете показать его позже в Настройках → "
-"Скрытые приложения."
+"Скрыть %1 приложение из AppGrid? Вы можете показать его позже в Настройках →"
+" Скрытые приложения."
 msgstr[1] ""
 "Скрыть %1 приложения из AppGrid? Вы можете показать их позже в Настройках → "
 "Скрытые приложения."
@@ -679,45 +678,51 @@ msgstr "Очистить поиск"
 msgid "Application"
 msgstr "Приложение"
 
-#: src/appmodel.cpp:239
+#: src/appmodel.cpp:240
 msgid "Utilities"
 msgstr "Служебные"
 
-#: src/appmodel.cpp:240
+#: src/appmodel.cpp:241
 msgid "Development"
 msgstr "Разработка"
 
-#: src/appmodel.cpp:241
+#: src/appmodel.cpp:242
 msgid "Graphics"
 msgstr "Графика"
 
-#: src/appmodel.cpp:242
+#: src/appmodel.cpp:243
 msgid "Internet"
 msgstr "Интернет"
 
-#: src/appmodel.cpp:243
+#: src/appmodel.cpp:244
 msgid "Multimedia"
 msgstr "Мультимедиа"
 
-#: src/appmodel.cpp:244
+#: src/appmodel.cpp:245
 msgid "Office"
 msgstr "Офис"
 
-#: src/appmodel.cpp:245
+#: src/appmodel.cpp:246
 msgid "Games"
 msgstr "Игры"
 
-#: src/appmodel.cpp:246
+#: src/appmodel.cpp:247
 msgid "Education"
 msgstr "Учеба"
 
-#: src/appmodel.cpp:247
+#: src/appmodel.cpp:248
 msgid "System"
 msgstr "Система"
 
-#: src/appmodel.cpp:248
+#: src/appmodel.cpp:249
 msgid "Other"
 msgstr "Другие"
+
+#~ msgid ""
+#~ "Anonymous request once per day to "
+#~ "https://appgrid.xarbit.dev/api/latest.json. "
+#~ msgstr ""
+#~ "Анонимный запрос раз в сутки на https://appgrid.xarbit.dev/api/latest.json. "
 
 #~ msgid "Clears the migration flag. On next open, AppGrid recomputes the "
 #~ msgstr "Очищает флаг миграции. При следующем открытии AppGrid пересчитает "
@@ -727,13 +732,13 @@ msgstr "Другие"
 
 #~ msgid "Click an icon to select it, then click another to swap positions"
 #~ msgstr ""
-#~ "Нажмите на значок, чтобы выбрать его, а затем на другой, чтобы поменять "
-#~ "их местами"
+#~ "Нажмите на значок, чтобы выбрать его, а затем на другой, чтобы поменять их "
+#~ "местами"
 
 #~ msgid "Now click another icon to swap, or click again to deselect"
 #~ msgstr ""
-#~ "Теперь нажмите на другой значок чтобы поменять их местами, или ещё раз "
-#~ "для отмены выбора"
+#~ "Теперь нажмите на другой значок чтобы поменять их местами, или ещё раз для "
+#~ "отмены выбора"
 
 #~ msgid "Done"
 #~ msgstr "Готово"

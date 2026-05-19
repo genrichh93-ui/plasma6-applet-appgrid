@@ -4,9 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dev.xarbit.appgrid 1.0\n"
-"Report-Msgid-Bugs-To: https://github.com/xarbit/plasma6-applet-appgrid/"
-"issues\n"
-"POT-Creation-Date: 2026-05-19 14:58+0200\n"
+"Report-Msgid-Bugs-To: https://github.com/xarbit/plasma6-applet-appgrid/issues\n"
+"POT-Creation-Date: 2026-05-19 16:33+0200\n"
 "PO-Revision-Date: 2026-03-14 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
@@ -14,96 +13,95 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"(n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: package/contents/ui/AppContextMenu.qml:156
+#: package/contents/ui/AppContextMenu.qml:158
 msgid "Remove from Favorites"
 msgstr "Pašalinti iš mėgstamų"
 
-#: package/contents/ui/AppContextMenu.qml:157
+#: package/contents/ui/AppContextMenu.qml:159
 msgid "Add to Favorites"
 msgstr "Pridėti į mėgstamus"
 
-#: package/contents/ui/AppContextMenu.qml:174
-#: package/contents/ui/AppContextMenu.qml:298
+#: package/contents/ui/AppContextMenu.qml:176
+#: package/contents/ui/AppContextMenu.qml:300
 msgid "Remove from Selection"
 msgstr "Pašalinti iš pasirinkimo"
 
-#: package/contents/ui/AppContextMenu.qml:175
+#: package/contents/ui/AppContextMenu.qml:177
 msgid "Add to Selection"
 msgstr "Pridėti prie pasirinkimo"
 
-#: package/contents/ui/AppContextMenu.qml:183
+#: package/contents/ui/AppContextMenu.qml:185
 msgid "Pin to Task Manager"
 msgstr "Prisegti prie užduočių tvarkyklės"
 
-#: package/contents/ui/AppContextMenu.qml:192
+#: package/contents/ui/AppContextMenu.qml:194
 msgid "Add to Desktop"
 msgstr "Pridėti į darbalaukį"
 
-#: package/contents/ui/AppContextMenu.qml:201
+#: package/contents/ui/AppContextMenu.qml:203
 msgid "Edit Application"
 msgstr "Redaguoti programą"
 
-#: package/contents/ui/AppContextMenu.qml:209
+#: package/contents/ui/AppContextMenu.qml:211
 msgid "Hide Application"
 msgstr "Slėpti programą"
 
-#: package/contents/ui/AppContextMenu.qml:228
+#: package/contents/ui/AppContextMenu.qml:230
 msgid "Add %1 to Favorites"
 msgid_plural "Add %1 to Favorites"
 msgstr[0] "Pridėti %1 prie parankinių"
 msgstr[1] "Pridėti %1 prie parankinių"
 msgstr[2] "Pridėti %1 prie parankinių"
 
-#: package/contents/ui/AppContextMenu.qml:242
+#: package/contents/ui/AppContextMenu.qml:244
 msgid "Remove %1 from Favorites"
 msgid_plural "Remove %1 from Favorites"
 msgstr[0] "Pašalinti %1 iš parankinių"
 msgstr[1] "Pašalinti %1 iš parankinių"
 msgstr[2] "Pašalinti %1 iš parankinių"
 
-#: package/contents/ui/AppContextMenu.qml:255
+#: package/contents/ui/AppContextMenu.qml:257
 msgid "Pin %1 to Task Manager"
 msgid_plural "Pin %1 to Task Manager"
 msgstr[0] "Prisegti %1 prie užduočių tvarkytuvės"
 msgstr[1] "Prisegti %1 prie užduočių tvarkytuvės"
 msgstr[2] "Prisegti %1 prie užduočių tvarkytuvės"
 
-#: package/contents/ui/AppContextMenu.qml:263
+#: package/contents/ui/AppContextMenu.qml:265
 msgid "Add %1 to Desktop"
 msgid_plural "Add %1 to Desktop"
 msgstr[0] "Pridėti %1 į darbalaukį"
 msgstr[1] "Pridėti %1 į darbalaukį"
 msgstr[2] "Pridėti %1 į darbalaukį"
 
-#: package/contents/ui/AppContextMenu.qml:271
+#: package/contents/ui/AppContextMenu.qml:273
 msgid "Launch %1 application"
 msgid_plural "Launch %1 applications"
 msgstr[0] "Paleisti %1 programą"
 msgstr[1] "Paleisti %1 programas"
 msgstr[2] "Paleisti %1 programų"
 
-#: package/contents/ui/AppContextMenu.qml:281
+#: package/contents/ui/AppContextMenu.qml:283
 msgid "Copy %1 path"
 msgid_plural "Copy %1 paths"
 msgstr[0] "Kopijuoti %1 kelią"
 msgstr[1] "Kopijuoti %1 kelius"
 msgstr[2] "Kopijuoti %1 kelio"
 
-#: package/contents/ui/AppContextMenu.qml:289
+#: package/contents/ui/AppContextMenu.qml:291
 msgid "Hide %1 application"
 msgid_plural "Hide %1 applications"
 msgstr[0] "Slėpti %1 programą"
 msgstr[1] "Slėpti %1 programas"
 msgstr[2] "Slėpti %1 programų"
 
-#: package/contents/ui/AppIconDelegate.qml:213
+#: package/contents/ui/AppIconDelegate.qml:216
 msgid "new"
 msgstr "nauja"
 
-#: package/contents/ui/AppIconDelegate.qml:214
+#: package/contents/ui/AppIconDelegate.qml:217
 msgid "selected"
 msgstr "pasirinkta"
 
@@ -241,192 +239,192 @@ msgstr "Slėpti tuščias kategorijas"
 msgid "Check the AppGrid website for new releases"
 msgstr "Tikrinti AppGrid svetainę dėl naujų leidimų"
 
-#: package/contents/ui/ConfigGeneral.qml:255
+#: package/contents/ui/ConfigGeneral.qml:254
 msgid ""
-"Anonymous request once per day to https://appgrid.xarbit.dev/api/"
-"latest.json. "
+"Anonymous request once per day to %1. Shows an indicator near the session "
+"buttons when a new version is available; no automatic install."
 msgstr ""
-"Anoniminis užklausimas kartą per dieną į https://appgrid.xarbit.dev/api/"
-"latest.json. "
+"Anoniminė užklausa kartą per dieną į %1. Šalia seanso mygtukų rodo "
+"indikatorių, kai pasiekiama nauja versija; jokio automatinio diegimo."
 
-#: package/contents/ui/ConfigGeneral.qml:264
+#: package/contents/ui/ConfigGeneral.qml:261
 msgid "Terminal shell:"
 msgstr "Terminalo apvalkalas:"
 
-#: package/contents/ui/ConfigGeneral.qml:268
+#: package/contents/ui/ConfigGeneral.qml:265
 msgid "Default (/bin/sh)"
 msgstr "Numatytasis (/bin/sh)"
 
-#: package/contents/ui/ConfigGeneral.qml:288
+#: package/contents/ui/ConfigGeneral.qml:285
 msgid "Appearance:"
 msgstr "Išvaizda:"
 
-#: package/contents/ui/ConfigGeneral.qml:289
+#: package/contents/ui/ConfigGeneral.qml:286
 msgid "Show divider lines"
 msgstr "Rodyti skiriamąsias linijas"
 
-#: package/contents/ui/ConfigGeneral.qml:294
+#: package/contents/ui/ConfigGeneral.qml:291
 msgid "Show scrollbars"
 msgstr "Rodyti slinkties juostas"
 
-#: package/contents/ui/ConfigGeneral.qml:299
+#: package/contents/ui/ConfigGeneral.qml:296
 msgid "Show tooltips on hover"
 msgstr "Rodyti įrankių patarimus virš pelės"
 
-#: package/contents/ui/ConfigGeneral.qml:304
+#: package/contents/ui/ConfigGeneral.qml:301
 msgid "Show new app badge"
 msgstr "Rodyti naujų programų ženklelį"
 
-#: package/contents/ui/ConfigGeneral.qml:309
+#: package/contents/ui/ConfigGeneral.qml:306
 msgid "Hide app labels on favorites tab"
 msgstr "Slėpti programų pavadinimus parankinių kortelėje"
 
-#: package/contents/ui/ConfigGeneral.qml:315
+#: package/contents/ui/ConfigGeneral.qml:312
 msgid "Sort favorites alphabetically"
 msgstr "Rikiuoti parankinius abėcėlės tvarka"
 
-#: package/contents/ui/ConfigGeneral.qml:320
+#: package/contents/ui/ConfigGeneral.qml:317
 msgid "Open/close animation:"
 msgstr "Atvėrimo/užvėrimo animacija:"
 
-#: package/contents/ui/ConfigGeneral.qml:321
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:318
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "None"
 msgstr "Jokia"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Fade"
 msgstr "Išnykimas"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Scale"
 msgstr "Mastelis"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Pop"
 msgstr "Iššokimas"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slide Up"
 msgstr "Pakelti"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slide Down"
 msgstr "Nuleisti"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Glide"
 msgstr "Slydimas"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Buzz"
 msgstr "Vibracija"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Twist"
 msgstr "Sukimas"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slam"
 msgstr "Smūgis"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Grow Up"
 msgstr "Augti aukštyn"
 
-#: package/contents/ui/ConfigGeneral.qml:326
+#: package/contents/ui/ConfigGeneral.qml:323
 msgid "Enable background blur"
 msgstr "Įjungti fono suliejimą"
 
-#: package/contents/ui/ConfigGeneral.qml:331
+#: package/contents/ui/ConfigGeneral.qml:328
 msgid "Dim background behind launcher"
 msgstr "Patamsinti foną už paleistuvo"
 
-#: package/contents/ui/ConfigGeneral.qml:336
+#: package/contents/ui/ConfigGeneral.qml:333
 msgid "Icon animation:"
 msgstr "Piktogramų animacija:"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Shake"
 msgstr "Purtymas"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Grow"
 msgstr "Didinimas"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Bounce"
 msgstr "Šokinėjimas"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Spin"
 msgstr "Sukimas"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Shuffle"
 msgstr "Maišymas"
 
-#: package/contents/ui/ConfigGeneral.qml:342
+#: package/contents/ui/ConfigGeneral.qml:339
 msgid "Animate icons on open"
 msgstr "Animuoti piktogramas atidarant"
 
-#: package/contents/ui/ConfigGeneral.qml:348
+#: package/contents/ui/ConfigGeneral.qml:345
 msgid "Show power/session buttons"
 msgstr "Rodyti maitinimo/seanso mygtukus"
 
-#: package/contents/ui/ConfigGeneral.qml:353
+#: package/contents/ui/ConfigGeneral.qml:350
 msgid "Show labels on power/session buttons"
 msgstr "Rodyti etiketes ant maitinimo/seanso mygtukų"
 
-#: package/contents/ui/ConfigGeneral.qml:359
+#: package/contents/ui/ConfigGeneral.qml:356
 msgid "Expand search to bookmarks, files, and websites"
 msgstr "Išplėsti paiešką į žymeles, failus ir svetaines"
 
-#: package/contents/ui/ConfigGeneral.qml:363
+#: package/contents/ui/ConfigGeneral.qml:360
 msgid "Configure Search Plugins…"
 msgstr "Konfigūruoti paieškos papildinius…"
 
-#: package/contents/ui/ConfigGeneral.qml:370
+#: package/contents/ui/ConfigGeneral.qml:367
 msgid "Background opacity:"
 msgstr "Fono nepermatomumas:"
 
-#: package/contents/ui/ConfigGeneral.qml:386
+#: package/contents/ui/ConfigGeneral.qml:383
 msgid "Corner radius:"
 msgstr "Kampų spindulys:"
 
-#: package/contents/ui/ConfigGeneral.qml:387
+#: package/contents/ui/ConfigGeneral.qml:384
 msgid "Use custom corner radius"
 msgstr "Naudoti pasirinktinį kampų spindulį"
 
-#: package/contents/ui/ConfigGeneral.qml:399
+#: package/contents/ui/ConfigGeneral.qml:396
 msgid "px"
 msgstr "tšk."
 
-#: package/contents/ui/ConfigGeneral.qml:411
+#: package/contents/ui/ConfigGeneral.qml:408
 msgid "Reset to Defaults"
 msgstr "Atkurti numatytuosius"
 
-#: package/contents/ui/ConfigGeneral.qml:455
+#: package/contents/ui/ConfigGeneral.qml:452
 msgid "Hidden apps:"
 msgstr "Paslėptos programos:"
 
-#: package/contents/ui/ConfigGeneral.qml:462
+#: package/contents/ui/ConfigGeneral.qml:459
 msgid ""
 "Right-click any app in the grid to hide it, or type h: in the search bar."
 msgstr ""
 "Dešiniuoju pelės klavišu spustelėkite bet kurią tinklelio programą, kad "
 "paslėptumėte, arba įveskite h: paieškos juostoje."
 
-#: package/contents/ui/ConfigGeneral.qml:469
+#: package/contents/ui/ConfigGeneral.qml:466
 msgid "No hidden applications."
 msgstr "Nėra paslėptų programų."
 
-#: package/contents/ui/ConfigGeneral.qml:515
+#: package/contents/ui/ConfigGeneral.qml:512
 #: package/contents/ui/prefix/PrefixHiddenView.qml:127
 msgid "Unhide"
 msgstr "Rodyti"
 
-#: package/contents/ui/ConfigGeneral.qml:532
+#: package/contents/ui/ConfigGeneral.qml:529
 #: package/contents/ui/prefix/PrefixHiddenView.qml:35
 msgid "Unhide All"
 msgstr "Rodyti viską"
@@ -679,45 +677,52 @@ msgstr "Išvalyti paiešką"
 msgid "Application"
 msgstr "Programa"
 
-#: src/appmodel.cpp:239
+#: src/appmodel.cpp:240
 msgid "Utilities"
 msgstr "Pagalbinės programos"
 
-#: src/appmodel.cpp:240
+#: src/appmodel.cpp:241
 msgid "Development"
 msgstr "Programavimas"
 
-#: src/appmodel.cpp:241
+#: src/appmodel.cpp:242
 msgid "Graphics"
 msgstr "Grafika"
 
-#: src/appmodel.cpp:242
+#: src/appmodel.cpp:243
 msgid "Internet"
 msgstr "Internetas"
 
-#: src/appmodel.cpp:243
+#: src/appmodel.cpp:244
 msgid "Multimedia"
 msgstr "Multimedija"
 
-#: src/appmodel.cpp:244
+#: src/appmodel.cpp:245
 msgid "Office"
 msgstr "Biuras"
 
-#: src/appmodel.cpp:245
+#: src/appmodel.cpp:246
 msgid "Games"
 msgstr "Žaidimai"
 
-#: src/appmodel.cpp:246
+#: src/appmodel.cpp:247
 msgid "Education"
 msgstr "Švietimas"
 
-#: src/appmodel.cpp:247
+#: src/appmodel.cpp:248
 msgid "System"
 msgstr "Sistema"
 
-#: src/appmodel.cpp:248
+#: src/appmodel.cpp:249
 msgid "Other"
 msgstr "Kita"
+
+#~ msgid ""
+#~ "Anonymous request once per day to "
+#~ "https://appgrid.xarbit.dev/api/latest.json. "
+#~ msgstr ""
+#~ "Anoniminis užklausimas kartą per dieną į "
+#~ "https://appgrid.xarbit.dev/api/latest.json. "
 
 #~ msgid "Clears the migration flag. On next open, AppGrid recomputes the "
 #~ msgstr ""

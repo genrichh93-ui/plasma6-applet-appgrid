@@ -4,9 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dev.xarbit.appgrid 1.0\n"
-"Report-Msgid-Bugs-To: https://github.com/xarbit/plasma6-applet-appgrid/"
-"issues\n"
-"POT-Creation-Date: 2026-05-19 14:58+0200\n"
+"Report-Msgid-Bugs-To: https://github.com/xarbit/plasma6-applet-appgrid/issues\n"
+"POT-Creation-Date: 2026-05-19 16:33+0200\n"
 "PO-Revision-Date: 2026-03-14 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Estonian\n"
@@ -16,86 +15,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: package/contents/ui/AppContextMenu.qml:156
+#: package/contents/ui/AppContextMenu.qml:158
 msgid "Remove from Favorites"
 msgstr "Eemalda lemmikutest"
 
-#: package/contents/ui/AppContextMenu.qml:157
+#: package/contents/ui/AppContextMenu.qml:159
 msgid "Add to Favorites"
 msgstr "Lisa lemmikutesse"
 
-#: package/contents/ui/AppContextMenu.qml:174
-#: package/contents/ui/AppContextMenu.qml:298
+#: package/contents/ui/AppContextMenu.qml:176
+#: package/contents/ui/AppContextMenu.qml:300
 msgid "Remove from Selection"
 msgstr "Eemalda valikust"
 
-#: package/contents/ui/AppContextMenu.qml:175
+#: package/contents/ui/AppContextMenu.qml:177
 msgid "Add to Selection"
 msgstr "Lisa valikusse"
 
-#: package/contents/ui/AppContextMenu.qml:183
+#: package/contents/ui/AppContextMenu.qml:185
 msgid "Pin to Task Manager"
 msgstr "Kinnita tegumiribale"
 
-#: package/contents/ui/AppContextMenu.qml:192
+#: package/contents/ui/AppContextMenu.qml:194
 msgid "Add to Desktop"
 msgstr "Lisa töölauale"
 
-#: package/contents/ui/AppContextMenu.qml:201
+#: package/contents/ui/AppContextMenu.qml:203
 msgid "Edit Application"
 msgstr "Muuda rakendust"
 
-#: package/contents/ui/AppContextMenu.qml:209
+#: package/contents/ui/AppContextMenu.qml:211
 msgid "Hide Application"
 msgstr "Peida rakendus"
 
-#: package/contents/ui/AppContextMenu.qml:228
+#: package/contents/ui/AppContextMenu.qml:230
 msgid "Add %1 to Favorites"
 msgid_plural "Add %1 to Favorites"
 msgstr[0] "Lisa %1 lemmikutesse"
 msgstr[1] "Lisa %1 lemmikutesse"
 
-#: package/contents/ui/AppContextMenu.qml:242
+#: package/contents/ui/AppContextMenu.qml:244
 msgid "Remove %1 from Favorites"
 msgid_plural "Remove %1 from Favorites"
 msgstr[0] "Eemalda %1 lemmikutest"
 msgstr[1] "Eemalda %1 lemmikutest"
 
-#: package/contents/ui/AppContextMenu.qml:255
+#: package/contents/ui/AppContextMenu.qml:257
 msgid "Pin %1 to Task Manager"
 msgid_plural "Pin %1 to Task Manager"
 msgstr[0] "Kinnita %1 tegumihaldurisse"
 msgstr[1] "Kinnita %1 tegumihaldurisse"
 
-#: package/contents/ui/AppContextMenu.qml:263
+#: package/contents/ui/AppContextMenu.qml:265
 msgid "Add %1 to Desktop"
 msgid_plural "Add %1 to Desktop"
 msgstr[0] "Lisa %1 töölauale"
 msgstr[1] "Lisa %1 töölauale"
 
-#: package/contents/ui/AppContextMenu.qml:271
+#: package/contents/ui/AppContextMenu.qml:273
 msgid "Launch %1 application"
 msgid_plural "Launch %1 applications"
 msgstr[0] "Käivita %1 rakendus"
 msgstr[1] "Käivita %1 rakendust"
 
-#: package/contents/ui/AppContextMenu.qml:281
+#: package/contents/ui/AppContextMenu.qml:283
 msgid "Copy %1 path"
 msgid_plural "Copy %1 paths"
 msgstr[0] "Kopeeri %1 tee"
 msgstr[1] "Kopeeri %1 teed"
 
-#: package/contents/ui/AppContextMenu.qml:289
+#: package/contents/ui/AppContextMenu.qml:291
 msgid "Hide %1 application"
 msgid_plural "Hide %1 applications"
 msgstr[0] "Peida %1 rakendus"
 msgstr[1] "Peida %1 rakendust"
 
-#: package/contents/ui/AppIconDelegate.qml:213
+#: package/contents/ui/AppIconDelegate.qml:216
 msgid "new"
 msgstr "uus"
 
-#: package/contents/ui/AppIconDelegate.qml:214
+#: package/contents/ui/AppIconDelegate.qml:217
 msgid "selected"
 msgstr "valitud"
 
@@ -233,192 +232,192 @@ msgstr "Peida tühjad kategooriad"
 msgid "Check the AppGrid website for new releases"
 msgstr "Kontrolli AppGridi veebisaiti uute väljaannete osas"
 
-#: package/contents/ui/ConfigGeneral.qml:255
+#: package/contents/ui/ConfigGeneral.qml:254
 msgid ""
-"Anonymous request once per day to https://appgrid.xarbit.dev/api/"
-"latest.json. "
+"Anonymous request once per day to %1. Shows an indicator near the session "
+"buttons when a new version is available; no automatic install."
 msgstr ""
-"Anonüümne päring kord päevas aadressile https://appgrid.xarbit.dev/api/"
-"latest.json. "
+"Anonüümne päring kord päevas aadressile %1. Kuvab seansinuppude kõrval "
+"märgise, kui on saadaval uus versioon; automaatset paigaldust ei toimu."
 
-#: package/contents/ui/ConfigGeneral.qml:264
+#: package/contents/ui/ConfigGeneral.qml:261
 msgid "Terminal shell:"
 msgstr "Terminali kest:"
 
-#: package/contents/ui/ConfigGeneral.qml:268
+#: package/contents/ui/ConfigGeneral.qml:265
 msgid "Default (/bin/sh)"
 msgstr "Vaikimisi (/bin/sh)"
 
-#: package/contents/ui/ConfigGeneral.qml:288
+#: package/contents/ui/ConfigGeneral.qml:285
 msgid "Appearance:"
 msgstr "Välimus:"
 
-#: package/contents/ui/ConfigGeneral.qml:289
+#: package/contents/ui/ConfigGeneral.qml:286
 msgid "Show divider lines"
 msgstr "Näita eraldusjooni"
 
-#: package/contents/ui/ConfigGeneral.qml:294
+#: package/contents/ui/ConfigGeneral.qml:291
 msgid "Show scrollbars"
 msgstr "Kuva kerimisribad"
 
-#: package/contents/ui/ConfigGeneral.qml:299
+#: package/contents/ui/ConfigGeneral.qml:296
 msgid "Show tooltips on hover"
 msgstr "Näita kohtspikreid hiirega osutamisel"
 
-#: package/contents/ui/ConfigGeneral.qml:304
+#: package/contents/ui/ConfigGeneral.qml:301
 msgid "Show new app badge"
 msgstr "Näita uue rakenduse märki"
 
-#: package/contents/ui/ConfigGeneral.qml:309
+#: package/contents/ui/ConfigGeneral.qml:306
 msgid "Hide app labels on favorites tab"
 msgstr "Peida rakenduste sildid lemmikute vahekaardil"
 
-#: package/contents/ui/ConfigGeneral.qml:315
+#: package/contents/ui/ConfigGeneral.qml:312
 msgid "Sort favorites alphabetically"
 msgstr "Sorteeri lemmikud tähestiku järgi"
 
-#: package/contents/ui/ConfigGeneral.qml:320
+#: package/contents/ui/ConfigGeneral.qml:317
 msgid "Open/close animation:"
 msgstr "Avamise/sulgemise animatsioon:"
 
-#: package/contents/ui/ConfigGeneral.qml:321
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:318
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "None"
 msgstr "Puudub"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Fade"
 msgstr "Hajumine"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Scale"
 msgstr "Skaala"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Pop"
 msgstr "Hüpe"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slide Up"
 msgstr "Libisemine üles"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slide Down"
 msgstr "Libisemine alla"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Glide"
 msgstr "Libisemine"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Buzz"
 msgstr "Vibratsioon"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Twist"
 msgstr "Pööre"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slam"
 msgstr "Löök"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Grow Up"
 msgstr "Kasva üles"
 
-#: package/contents/ui/ConfigGeneral.qml:326
+#: package/contents/ui/ConfigGeneral.qml:323
 msgid "Enable background blur"
 msgstr "Luba tausta hägusus"
 
-#: package/contents/ui/ConfigGeneral.qml:331
+#: package/contents/ui/ConfigGeneral.qml:328
 msgid "Dim background behind launcher"
 msgstr "Tumenda käivitaja taga olev taust"
 
-#: package/contents/ui/ConfigGeneral.qml:336
+#: package/contents/ui/ConfigGeneral.qml:333
 msgid "Icon animation:"
 msgstr "Ikooni animatsioon:"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Shake"
 msgstr "Raputamine"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Grow"
 msgstr "Suurendamine"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Bounce"
 msgstr "Põrkamine"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Spin"
 msgstr "Keerlemine"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Shuffle"
 msgstr "Segamine"
 
-#: package/contents/ui/ConfigGeneral.qml:342
+#: package/contents/ui/ConfigGeneral.qml:339
 msgid "Animate icons on open"
 msgstr "Animeeri ikoone avamisel"
 
-#: package/contents/ui/ConfigGeneral.qml:348
+#: package/contents/ui/ConfigGeneral.qml:345
 msgid "Show power/session buttons"
 msgstr "Näita toite-/seansi nuppe"
 
-#: package/contents/ui/ConfigGeneral.qml:353
+#: package/contents/ui/ConfigGeneral.qml:350
 msgid "Show labels on power/session buttons"
 msgstr "Kuva sildid toite-/seanssinuppudel"
 
-#: package/contents/ui/ConfigGeneral.qml:359
+#: package/contents/ui/ConfigGeneral.qml:356
 msgid "Expand search to bookmarks, files, and websites"
 msgstr "Laienda otsingut järjehoidjatele, failidele ja veebisaitidele"
 
-#: package/contents/ui/ConfigGeneral.qml:363
+#: package/contents/ui/ConfigGeneral.qml:360
 msgid "Configure Search Plugins…"
 msgstr "Seadista otsingupluginaid…"
 
-#: package/contents/ui/ConfigGeneral.qml:370
+#: package/contents/ui/ConfigGeneral.qml:367
 msgid "Background opacity:"
 msgstr "Tausta läbipaistmatus:"
 
-#: package/contents/ui/ConfigGeneral.qml:386
+#: package/contents/ui/ConfigGeneral.qml:383
 msgid "Corner radius:"
 msgstr "Nurga raadius:"
 
-#: package/contents/ui/ConfigGeneral.qml:387
+#: package/contents/ui/ConfigGeneral.qml:384
 msgid "Use custom corner radius"
 msgstr "Kasuta kohandatud nurga raadiust"
 
-#: package/contents/ui/ConfigGeneral.qml:399
+#: package/contents/ui/ConfigGeneral.qml:396
 msgid "px"
 msgstr "px"
 
-#: package/contents/ui/ConfigGeneral.qml:411
+#: package/contents/ui/ConfigGeneral.qml:408
 msgid "Reset to Defaults"
 msgstr "Lähtesta vaikeväärtustele"
 
-#: package/contents/ui/ConfigGeneral.qml:455
+#: package/contents/ui/ConfigGeneral.qml:452
 msgid "Hidden apps:"
 msgstr "Peidetud rakendused:"
 
-#: package/contents/ui/ConfigGeneral.qml:462
+#: package/contents/ui/ConfigGeneral.qml:459
 msgid ""
 "Right-click any app in the grid to hide it, or type h: in the search bar."
 msgstr ""
-"Tehke rakenduse peidamiseks ruudustikus paremklõps või tippige otsinguribale "
-"h:."
+"Tehke rakenduse peidamiseks ruudustikus paremklõps või tippige otsinguribale"
+" h:."
 
-#: package/contents/ui/ConfigGeneral.qml:469
+#: package/contents/ui/ConfigGeneral.qml:466
 msgid "No hidden applications."
 msgstr "Peidetud rakendusi pole."
 
-#: package/contents/ui/ConfigGeneral.qml:515
+#: package/contents/ui/ConfigGeneral.qml:512
 #: package/contents/ui/prefix/PrefixHiddenView.qml:127
 msgid "Unhide"
 msgstr "Näita"
 
-#: package/contents/ui/ConfigGeneral.qml:532
+#: package/contents/ui/ConfigGeneral.qml:529
 #: package/contents/ui/prefix/PrefixHiddenView.qml:35
 msgid "Unhide All"
 msgstr "Näita kõiki"
@@ -663,45 +662,52 @@ msgstr "Tühjenda otsing"
 msgid "Application"
 msgstr "Rakendus"
 
-#: src/appmodel.cpp:239
+#: src/appmodel.cpp:240
 msgid "Utilities"
 msgstr "Utiliidid"
 
-#: src/appmodel.cpp:240
+#: src/appmodel.cpp:241
 msgid "Development"
 msgstr "Arendus"
 
-#: src/appmodel.cpp:241
+#: src/appmodel.cpp:242
 msgid "Graphics"
 msgstr "Graafika"
 
-#: src/appmodel.cpp:242
+#: src/appmodel.cpp:243
 msgid "Internet"
 msgstr "Internet"
 
-#: src/appmodel.cpp:243
+#: src/appmodel.cpp:244
 msgid "Multimedia"
 msgstr "Multimeedia"
 
-#: src/appmodel.cpp:244
+#: src/appmodel.cpp:245
 msgid "Office"
 msgstr "Kontor"
 
-#: src/appmodel.cpp:245
+#: src/appmodel.cpp:246
 msgid "Games"
 msgstr "Mängud"
 
-#: src/appmodel.cpp:246
+#: src/appmodel.cpp:247
 msgid "Education"
 msgstr "Haridus"
 
-#: src/appmodel.cpp:247
+#: src/appmodel.cpp:248
 msgid "System"
 msgstr "Süsteem"
 
-#: src/appmodel.cpp:248
+#: src/appmodel.cpp:249
 msgid "Other"
 msgstr "Muu"
+
+#~ msgid ""
+#~ "Anonymous request once per day to "
+#~ "https://appgrid.xarbit.dev/api/latest.json. "
+#~ msgstr ""
+#~ "Anonüümne päring kord päevas aadressile "
+#~ "https://appgrid.xarbit.dev/api/latest.json. "
 
 #~ msgid "Clears the migration flag. On next open, AppGrid recomputes the "
 #~ msgstr ""

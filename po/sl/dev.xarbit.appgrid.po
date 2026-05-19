@@ -5,9 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: dev.xarbit.appgrid 1.0\n"
-"Report-Msgid-Bugs-To: https://github.com/xarbit/plasma6-applet-appgrid/"
-"issues\n"
-"POT-Creation-Date: 2026-05-19 14:58+0200\n"
+"Report-Msgid-Bugs-To: https://github.com/xarbit/plasma6-applet-appgrid/issues\n"
+"POT-Creation-Date: 2026-05-19 16:33+0200\n"
 "PO-Revision-Date: 2026-03-14 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Slovenian\n"
@@ -15,43 +14,42 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
-"n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
-#: package/contents/ui/AppContextMenu.qml:156
+#: package/contents/ui/AppContextMenu.qml:158
 msgid "Remove from Favorites"
 msgstr "Odstrani iz priljubljenih"
 
-#: package/contents/ui/AppContextMenu.qml:157
+#: package/contents/ui/AppContextMenu.qml:159
 msgid "Add to Favorites"
 msgstr "Dodaj med priljubljene"
 
-#: package/contents/ui/AppContextMenu.qml:174
-#: package/contents/ui/AppContextMenu.qml:298
+#: package/contents/ui/AppContextMenu.qml:176
+#: package/contents/ui/AppContextMenu.qml:300
 msgid "Remove from Selection"
 msgstr "Odstrani iz izbora"
 
-#: package/contents/ui/AppContextMenu.qml:175
+#: package/contents/ui/AppContextMenu.qml:177
 msgid "Add to Selection"
 msgstr "Dodaj v izbor"
 
-#: package/contents/ui/AppContextMenu.qml:183
+#: package/contents/ui/AppContextMenu.qml:185
 msgid "Pin to Task Manager"
 msgstr "Pripni v upravljalnik opravil"
 
-#: package/contents/ui/AppContextMenu.qml:192
+#: package/contents/ui/AppContextMenu.qml:194
 msgid "Add to Desktop"
 msgstr "Dodaj na namizje"
 
-#: package/contents/ui/AppContextMenu.qml:201
+#: package/contents/ui/AppContextMenu.qml:203
 msgid "Edit Application"
 msgstr "Uredi program"
 
-#: package/contents/ui/AppContextMenu.qml:209
+#: package/contents/ui/AppContextMenu.qml:211
 msgid "Hide Application"
 msgstr "Skrij program"
 
-#: package/contents/ui/AppContextMenu.qml:228
+#: package/contents/ui/AppContextMenu.qml:230
 msgid "Add %1 to Favorites"
 msgid_plural "Add %1 to Favorites"
 msgstr[0] "Dodaj %1 med priljubljene"
@@ -59,7 +57,7 @@ msgstr[1] "Dodaj %1 med priljubljene"
 msgstr[2] "Dodaj %1 med priljubljene"
 msgstr[3] "Dodaj %1 med priljubljene"
 
-#: package/contents/ui/AppContextMenu.qml:242
+#: package/contents/ui/AppContextMenu.qml:244
 msgid "Remove %1 from Favorites"
 msgid_plural "Remove %1 from Favorites"
 msgstr[0] "Odstrani %1 iz priljubljenih"
@@ -67,7 +65,7 @@ msgstr[1] "Odstrani %1 iz priljubljenih"
 msgstr[2] "Odstrani %1 iz priljubljenih"
 msgstr[3] "Odstrani %1 iz priljubljenih"
 
-#: package/contents/ui/AppContextMenu.qml:255
+#: package/contents/ui/AppContextMenu.qml:257
 msgid "Pin %1 to Task Manager"
 msgid_plural "Pin %1 to Task Manager"
 msgstr[0] "Pripni %1 v upravitelj opravil"
@@ -75,7 +73,7 @@ msgstr[1] "Pripni %1 v upravitelj opravil"
 msgstr[2] "Pripni %1 v upravitelj opravil"
 msgstr[3] "Pripni %1 v upravitelj opravil"
 
-#: package/contents/ui/AppContextMenu.qml:263
+#: package/contents/ui/AppContextMenu.qml:265
 msgid "Add %1 to Desktop"
 msgid_plural "Add %1 to Desktop"
 msgstr[0] "Dodaj %1 na namizje"
@@ -83,7 +81,7 @@ msgstr[1] "Dodaj %1 na namizje"
 msgstr[2] "Dodaj %1 na namizje"
 msgstr[3] "Dodaj %1 na namizje"
 
-#: package/contents/ui/AppContextMenu.qml:271
+#: package/contents/ui/AppContextMenu.qml:273
 msgid "Launch %1 application"
 msgid_plural "Launch %1 applications"
 msgstr[0] "Zaženi %1 aplikacijo"
@@ -91,7 +89,7 @@ msgstr[1] "Zaženi %1 aplikaciji"
 msgstr[2] "Zaženi %1 aplikacije"
 msgstr[3] "Zaženi %1 aplikacij"
 
-#: package/contents/ui/AppContextMenu.qml:281
+#: package/contents/ui/AppContextMenu.qml:283
 msgid "Copy %1 path"
 msgid_plural "Copy %1 paths"
 msgstr[0] "Kopiraj pot za %1"
@@ -99,7 +97,7 @@ msgstr[1] "Kopiraj poti za %1"
 msgstr[2] "Kopiraj poti za %1"
 msgstr[3] "Kopiraj poti za %1"
 
-#: package/contents/ui/AppContextMenu.qml:289
+#: package/contents/ui/AppContextMenu.qml:291
 msgid "Hide %1 application"
 msgid_plural "Hide %1 applications"
 msgstr[0] "Skrij %1 aplikacijo"
@@ -107,11 +105,11 @@ msgstr[1] "Skrij %1 aplikaciji"
 msgstr[2] "Skrij %1 aplikacije"
 msgstr[3] "Skrij %1 aplikacij"
 
-#: package/contents/ui/AppIconDelegate.qml:213
+#: package/contents/ui/AppIconDelegate.qml:216
 msgid "new"
 msgstr "novo"
 
-#: package/contents/ui/AppIconDelegate.qml:214
+#: package/contents/ui/AppIconDelegate.qml:217
 msgid "selected"
 msgstr "izbrano"
 
@@ -249,192 +247,192 @@ msgstr "Skrij prazne kategorije"
 msgid "Check the AppGrid website for new releases"
 msgstr "Preveri spletno mesto AppGrid za nove izdaje"
 
-#: package/contents/ui/ConfigGeneral.qml:255
+#: package/contents/ui/ConfigGeneral.qml:254
 msgid ""
-"Anonymous request once per day to https://appgrid.xarbit.dev/api/"
-"latest.json. "
+"Anonymous request once per day to %1. Shows an indicator near the session "
+"buttons when a new version is available; no automatic install."
 msgstr ""
-"Anonimna zahteva enkrat dnevno na https://appgrid.xarbit.dev/api/"
-"latest.json. "
+"Anonimna zahteva enkrat dnevno na %1. Prikaže oznako poleg gumbov seje, ko "
+"je na voljo nova različica; brez samodejne namestitve."
 
-#: package/contents/ui/ConfigGeneral.qml:264
+#: package/contents/ui/ConfigGeneral.qml:261
 msgid "Terminal shell:"
 msgstr "Lupina terminala:"
 
-#: package/contents/ui/ConfigGeneral.qml:268
+#: package/contents/ui/ConfigGeneral.qml:265
 msgid "Default (/bin/sh)"
 msgstr "Privzeta (/bin/sh)"
 
-#: package/contents/ui/ConfigGeneral.qml:288
+#: package/contents/ui/ConfigGeneral.qml:285
 msgid "Appearance:"
 msgstr "Videz:"
 
-#: package/contents/ui/ConfigGeneral.qml:289
+#: package/contents/ui/ConfigGeneral.qml:286
 msgid "Show divider lines"
 msgstr "Pokaži ločilne črte"
 
-#: package/contents/ui/ConfigGeneral.qml:294
+#: package/contents/ui/ConfigGeneral.qml:291
 msgid "Show scrollbars"
 msgstr "Prikaži drsne trakove"
 
-#: package/contents/ui/ConfigGeneral.qml:299
+#: package/contents/ui/ConfigGeneral.qml:296
 msgid "Show tooltips on hover"
 msgstr "Pokaži opise orodij ob prehodu z miško"
 
-#: package/contents/ui/ConfigGeneral.qml:304
+#: package/contents/ui/ConfigGeneral.qml:301
 msgid "Show new app badge"
 msgstr "Pokaži značko novih aplikacij"
 
-#: package/contents/ui/ConfigGeneral.qml:309
+#: package/contents/ui/ConfigGeneral.qml:306
 msgid "Hide app labels on favorites tab"
 msgstr "Skrij oznake aplikacij na zavihku priljubljenih"
 
-#: package/contents/ui/ConfigGeneral.qml:315
+#: package/contents/ui/ConfigGeneral.qml:312
 msgid "Sort favorites alphabetically"
 msgstr "Razvrsti priljubljene abecedno"
 
-#: package/contents/ui/ConfigGeneral.qml:320
+#: package/contents/ui/ConfigGeneral.qml:317
 msgid "Open/close animation:"
 msgstr "Animacija odpiranja/zapiranja:"
 
-#: package/contents/ui/ConfigGeneral.qml:321
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:318
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "None"
 msgstr "Brez"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Fade"
 msgstr "Bledenje"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Scale"
 msgstr "Lestvica"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Pop"
 msgstr "Pop"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slide Up"
 msgstr "Drsenje navzgor"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slide Down"
 msgstr "Drsenje navzdol"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Glide"
 msgstr "Drsenje"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Buzz"
 msgstr "Vibracija"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Twist"
 msgstr "Zasuk"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Slam"
 msgstr "Tresk"
 
-#: package/contents/ui/ConfigGeneral.qml:321
+#: package/contents/ui/ConfigGeneral.qml:318
 msgid "Grow Up"
 msgstr "Rasti navzgor"
 
-#: package/contents/ui/ConfigGeneral.qml:326
+#: package/contents/ui/ConfigGeneral.qml:323
 msgid "Enable background blur"
 msgstr "Omogoči zameglitev ozadja"
 
-#: package/contents/ui/ConfigGeneral.qml:331
+#: package/contents/ui/ConfigGeneral.qml:328
 msgid "Dim background behind launcher"
 msgstr "Zatemni ozadje za zaganjalnikom"
 
-#: package/contents/ui/ConfigGeneral.qml:336
+#: package/contents/ui/ConfigGeneral.qml:333
 msgid "Icon animation:"
 msgstr "Animacija ikon:"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Shake"
 msgstr "Tresenje"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Grow"
 msgstr "Povečava"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Bounce"
 msgstr "Poskakovanje"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Spin"
 msgstr "Vrtenje"
 
-#: package/contents/ui/ConfigGeneral.qml:337
+#: package/contents/ui/ConfigGeneral.qml:334
 msgid "Shuffle"
 msgstr "Mešanje"
 
-#: package/contents/ui/ConfigGeneral.qml:342
+#: package/contents/ui/ConfigGeneral.qml:339
 msgid "Animate icons on open"
 msgstr "Animiraj ikone ob odprtju"
 
-#: package/contents/ui/ConfigGeneral.qml:348
+#: package/contents/ui/ConfigGeneral.qml:345
 msgid "Show power/session buttons"
 msgstr "Pokaži gumbe napajanja/seje"
 
-#: package/contents/ui/ConfigGeneral.qml:353
+#: package/contents/ui/ConfigGeneral.qml:350
 msgid "Show labels on power/session buttons"
 msgstr "Prikaži oznake na gumbih za napajanje/sejo"
 
-#: package/contents/ui/ConfigGeneral.qml:359
+#: package/contents/ui/ConfigGeneral.qml:356
 msgid "Expand search to bookmarks, files, and websites"
 msgstr "Razširi iskanje na zaznamke, datoteke in spletna mesta"
 
-#: package/contents/ui/ConfigGeneral.qml:363
+#: package/contents/ui/ConfigGeneral.qml:360
 msgid "Configure Search Plugins…"
 msgstr "Nastavi iskalne vtičnike …"
 
-#: package/contents/ui/ConfigGeneral.qml:370
+#: package/contents/ui/ConfigGeneral.qml:367
 msgid "Background opacity:"
 msgstr "Neprosojnost ozadja:"
 
-#: package/contents/ui/ConfigGeneral.qml:386
+#: package/contents/ui/ConfigGeneral.qml:383
 msgid "Corner radius:"
 msgstr "Polmer vogalov:"
 
-#: package/contents/ui/ConfigGeneral.qml:387
+#: package/contents/ui/ConfigGeneral.qml:384
 msgid "Use custom corner radius"
 msgstr "Uporabi polmer vogalov po meri"
 
-#: package/contents/ui/ConfigGeneral.qml:399
+#: package/contents/ui/ConfigGeneral.qml:396
 msgid "px"
 msgstr "px"
 
-#: package/contents/ui/ConfigGeneral.qml:411
+#: package/contents/ui/ConfigGeneral.qml:408
 msgid "Reset to Defaults"
 msgstr "Ponastavi na privzeto"
 
-#: package/contents/ui/ConfigGeneral.qml:455
+#: package/contents/ui/ConfigGeneral.qml:452
 msgid "Hidden apps:"
 msgstr "Skrite aplikacije:"
 
-#: package/contents/ui/ConfigGeneral.qml:462
+#: package/contents/ui/ConfigGeneral.qml:459
 msgid ""
 "Right-click any app in the grid to hide it, or type h: in the search bar."
 msgstr ""
-"Z desno tipko miške kliknite katero koli aplikacijo v mreži, da jo skrijete, "
-"ali vnesite h: v iskalno vrstico."
+"Z desno tipko miške kliknite katero koli aplikacijo v mreži, da jo skrijete,"
+" ali vnesite h: v iskalno vrstico."
 
-#: package/contents/ui/ConfigGeneral.qml:469
+#: package/contents/ui/ConfigGeneral.qml:466
 msgid "No hidden applications."
 msgstr "Ni skritih programov."
 
-#: package/contents/ui/ConfigGeneral.qml:515
+#: package/contents/ui/ConfigGeneral.qml:512
 #: package/contents/ui/prefix/PrefixHiddenView.qml:127
 msgid "Unhide"
 msgstr "Prikaži"
 
-#: package/contents/ui/ConfigGeneral.qml:532
+#: package/contents/ui/ConfigGeneral.qml:529
 #: package/contents/ui/prefix/PrefixHiddenView.qml:35
 msgid "Unhide All"
 msgstr "Pokaži vse"
@@ -689,45 +687,52 @@ msgstr "Počisti iskanje"
 msgid "Application"
 msgstr "Aplikacija"
 
-#: src/appmodel.cpp:239
+#: src/appmodel.cpp:240
 msgid "Utilities"
 msgstr "Pripomočki"
 
-#: src/appmodel.cpp:240
+#: src/appmodel.cpp:241
 msgid "Development"
 msgstr "Razvoj"
 
-#: src/appmodel.cpp:241
+#: src/appmodel.cpp:242
 msgid "Graphics"
 msgstr "Grafika"
 
-#: src/appmodel.cpp:242
+#: src/appmodel.cpp:243
 msgid "Internet"
 msgstr "Internet"
 
-#: src/appmodel.cpp:243
+#: src/appmodel.cpp:244
 msgid "Multimedia"
 msgstr "Večpredstavnost"
 
-#: src/appmodel.cpp:244
+#: src/appmodel.cpp:245
 msgid "Office"
 msgstr "Pisarna"
 
-#: src/appmodel.cpp:245
+#: src/appmodel.cpp:246
 msgid "Games"
 msgstr "Igre"
 
-#: src/appmodel.cpp:246
+#: src/appmodel.cpp:247
 msgid "Education"
 msgstr "Izobraževanje"
 
-#: src/appmodel.cpp:247
+#: src/appmodel.cpp:248
 msgid "System"
 msgstr "Sistem"
 
-#: src/appmodel.cpp:248
+#: src/appmodel.cpp:249
 msgid "Other"
 msgstr "Drugo"
+
+#~ msgid ""
+#~ "Anonymous request once per day to "
+#~ "https://appgrid.xarbit.dev/api/latest.json. "
+#~ msgstr ""
+#~ "Anonimna zahteva enkrat dnevno na "
+#~ "https://appgrid.xarbit.dev/api/latest.json. "
 
 #~ msgid "Clears the migration flag. On next open, AppGrid recomputes the "
 #~ msgstr ""
