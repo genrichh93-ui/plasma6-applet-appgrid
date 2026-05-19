@@ -213,8 +213,9 @@ QVariant AppModel::data(const QModelIndex &index, int role) const
         return app.comment;
     case InstallSourceRole:
         return app.installSource;
+    default:
+        return {};
     }
-    return {};
 }
 
 QHash<int, QByteArray> AppModel::roleNames() const

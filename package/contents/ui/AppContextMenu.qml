@@ -11,6 +11,8 @@
     non-applicable rows don't exist at all.
 */
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.plasmoid

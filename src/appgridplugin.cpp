@@ -625,6 +625,7 @@ QVariant UnifiedSearchModel::data(const QModelIndex &index, int role) const
         case DesktopFileRole: return srcIdx.data(AppModel::DesktopFileRole);
         case IsNewRole:       return m_appModel->isNewApp(srcIdx.data(AppModel::StorageIdRole).toString());
         case InstallSourceRole: return srcIdx.data(AppModel::InstallSourceRole);
+        default: return {};
         }
     } else {
         const int runnerRow = row - ac;
@@ -650,6 +651,7 @@ QVariant UnifiedSearchModel::data(const QModelIndex &index, int role) const
         }
         case IsNewRole:       return false;
         case InstallSourceRole: return QString();
+        default: return {};
         }
     }
     return {};
