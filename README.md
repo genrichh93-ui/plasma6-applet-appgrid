@@ -20,8 +20,10 @@ Website with screenshots, features, FAQ, and install instructions: **[appgrid.xa
 | Distro | Command |
 |---|---|
 | **Arch Linux + derivatives** (AUR — official) | `yay -S plasma6-applets-appgrid` |
-| **Fedora / Ubuntu / Debian** | Pre-built `.rpm` / `.deb` on the [Releases](https://github.com/xarbit/plasma6-applet-appgrid/releases) page |
+| **Ubuntu 24.04+** (Launchpad PPA — official) | `sudo add-apt-repository ppa:xarbit/plasma-applet-appgrid && sudo apt install plasma-applet-appgrid` |
+| **Fedora** (Copr — official) | `sudo dnf copr enable scujas/plasma-applet-appgrid && sudo dnf install plasma-applet-appgrid` |
 | **Immutable distros** (KDE Linux, Kinoite, Bazzite, Aurora, Kalpa, SteamOS) | Universal `~/.local/` tarball — see [INSTALL.TXT](packages/universal/INSTALL.TXT) |
+| **Nix / NixOS** | Flake — see [packages/nix/README.md](packages/nix/README.md) |
 | **openSUSE** (community) | [OBS package by @JMarcosHP01](https://build.opensuse.org/package/show/home:JMarcosHP01/plasma6-applet-appgrid) |
 | **Gentoo** (community) | [Overlay by @mnalmahmud](https://github.com/mnalmahmud/mnalmahmud-overlay) |
 
@@ -31,7 +33,7 @@ Full per-distro guide with download links, checksums, and step-by-step terminal 
 
 ## Build from source
 
-Requires Plasma 6.0+ (6.4+ recommended) and the KDE Frameworks 6 development headers — see [`PKGBUILD`](PKGBUILD) for the Arch list or the spec files under [`packages/`](packages/) for Fedora / Debian / openSUSE equivalents.
+Requires Plasma 6.0+ (6.4+ recommended) and the KDE Frameworks 6 development headers — see [`PKGBUILD`](PKGBUILD) for the Arch list, or [`packages/`](packages/) for the Fedora spec and Ubuntu `debian/` packaging.
 
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
