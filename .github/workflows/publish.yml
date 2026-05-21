@@ -99,13 +99,18 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            devscripts dput dpkg-dev debhelper
+            devscripts dput dpkg-dev debhelper libdistro-info-perl
 
       - name: Checkout
         uses: actions/checkout@v5
 
       - name: Import signing key
-        run: printf '%s' "${{ secrets.LAUNCHPAD_GPG_KEY }}" | gpg --batch --import
+        run: |
+          printf '%s' "${{ secrets.LAUNCHPAD_GPG_KEY }}" | gpg --batch --import
+          if ! gpg --list-secret-keys --with-colons | grep -q '^sec:'; then
+            echo "::error::LAUNCHPAD_GPG_KEY holds no secret key — re-export it with 'gpg --armor --export-secret-keys <KEYID>' and update the secret"
+            exit 1
+          fi
 
       - name: Build and upload source package
         env:
