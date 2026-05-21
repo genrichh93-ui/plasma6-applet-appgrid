@@ -194,8 +194,8 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s\n' "$AUR_SSH_KEY" > ~/.ssh/aur
           chmod 600 ~/.ssh/aur
-          ssh-keyscan -t ed25519,rsa aur.archlinux.org >> ~/.ssh/known_hosts 2>/dev/null
-          export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur -o IdentitiesOnly=yes"
+          # accept-new: trust AUR's host key on first connect, then pin it.
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/aur -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
           git config --global user.name "AppGrid CI"
           git config --global user.email "code@xarbit.dev"
           # Cloning a not-yet-existing AUR package returns an empty repo —
