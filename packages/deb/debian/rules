@@ -14,4 +14,8 @@ APPGRID_VERSION := $(shell dpkg-parsechangelog -SVersion | sed 's/~[0-9.]*$$//; 
 	dh $@ --buildsystem=cmake
 
 override_dh_auto_configure:
-	dh_auto_configure -- -DAPPGRID_VERSION_OVERRIDE=$(APPGRID_VERSION)
+	dh_auto_configure -- -DAPPGRID_VERSION_OVERRIDE=$(APPGRID_VERSION) -DBUILD_TESTING=OFF
+
+# The unit tests are CI's job and need a Qt platform plugin; the Launchpad
+# buildds are headless — skip the test step in the package build.
+override_dh_auto_test:
