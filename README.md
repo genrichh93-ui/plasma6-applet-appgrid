@@ -4,9 +4,7 @@
 
 <h1 align="center">AppGrid — KDE Plasma 6 Application Launcher</h1>
 
-> **🧪 Release candidate: `v1.8.0-rc.2`** — universal package for immutable distros, opt-in in-app update checker, by-category drag-and-drop, hardened installer. Please [report regressions](https://github.com/xarbit/plasma6-applet-appgrid/issues) before 1.8.0 stable ships. Type `i:` in the search bar to copy your system info for a report.
-
-A grid-style application launcher for KDE Plasma 6, inspired by macOS Launchpad, COSMIC, and Pantheon. Ships as two plasmoids — a standalone centered popup (**AppGrid**) and a native Plasma panel popup (**AppGrid Panel**) — both sharing the same grid, search, categories, and config.
+A grid-style application launcher for KDE Plasma 6. Ships as two plasmoids — a standalone centered popup (**AppGrid**) and a native Plasma panel popup (**AppGrid Panel**) — both sharing the same grid, search, categories, and config.
 
 ![KDE Plasma](https://img.shields.io/badge/KDE_Plasma-6.0+-blue)
 ![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green)
@@ -20,7 +18,7 @@ Website with screenshots, features, FAQ, and install instructions: **[appgrid.xa
 | Distro | Command |
 |---|---|
 | **Arch Linux + derivatives** (AUR — official) | `yay -S plasma6-applets-appgrid` |
-| **Ubuntu 24.04+** (Launchpad PPA — official) | `sudo add-apt-repository ppa:xarbit/plasma-applet-appgrid && sudo apt install plasma-applet-appgrid` |
+| **Ubuntu 25.10+** (Launchpad PPA — official) | `sudo add-apt-repository ppa:xarbit/plasma-applet-appgrid && sudo apt install plasma-applet-appgrid` |
 | **Fedora** (Copr — official) | `sudo dnf copr enable scujas/plasma-applet-appgrid && sudo dnf install plasma-applet-appgrid` |
 | **Immutable distros** (KDE Linux, Kinoite, Bazzite, Aurora, Kalpa, SteamOS) | Universal `~/.local/` tarball — see [INSTALL.TXT](packages/universal/INSTALL.TXT) |
 | **Nix / NixOS** | Flake — see [packages/nix/README.md](packages/nix/README.md) |

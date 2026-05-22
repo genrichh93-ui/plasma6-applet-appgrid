@@ -31,8 +31,7 @@ Depends: ${shlibs:Depends},
  ${misc:Depends},
  plasma-workspace,
  plasma-desktop
-Description: modern fullscreen application launcher for KDE Plasma
- AppGrid is a grid-style application launcher for KDE Plasma 6,
- inspired by macOS Launchpad and COSMIC. It offers unified search,
- favorites, categories, and both a panel and a centered full-screen
- presentation.
+Description: modern application launcher for KDE Plasma
+ AppGrid is a grid-style application launcher for KDE Plasma 6. It
+ offers unified search, favorites, categories, and both a panel and a
+ centered popup presentation.

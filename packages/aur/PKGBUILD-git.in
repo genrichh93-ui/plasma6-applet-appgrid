@@ -8,7 +8,7 @@
 pkgname=plasma6-applets-appgrid-git
 pkgver=${PKGVER}
 pkgrel=1
-pkgdesc="A modern fullscreen application launcher for KDE Plasma (development build)"
+pkgdesc="A modern application launcher for KDE Plasma (development build)"
 arch=('x86_64')
 url="https://appgrid.xarbit.dev"
 license=('GPL-2.0-or-later')
