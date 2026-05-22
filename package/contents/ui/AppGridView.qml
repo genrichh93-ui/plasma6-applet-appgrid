@@ -114,6 +114,9 @@ GridView {
     }
 
     clip: true
+
+    WheelScroller { target: gridView }
+
     // Cache buffer: extra screens of delegates kept alive off-screen. Grown
     // while a drag is in flight so an auto-scroll cannot recycle the source
     // delegate (which would drop the pointer grab). One viewport of slack

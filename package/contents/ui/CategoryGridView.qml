@@ -18,6 +18,8 @@ Flickable {
 
     clip: true
 
+    WheelScroller { target: categoryGrid }
+
     property var appsModel: null
     property var groupedApps: []
     property real cellWidth: 100

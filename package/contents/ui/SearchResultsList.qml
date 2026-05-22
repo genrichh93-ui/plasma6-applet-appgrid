@@ -24,6 +24,8 @@ ListView {
 
     clip: true
     reuseItems: true
+
+    WheelScroller { target: listView }
     currentIndex: count > 0 ? 0 : -1
     property bool animateHighlight: true
     highlightMoveDuration: animateHighlight ? Kirigami.Units.shortDuration : 0

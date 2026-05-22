@@ -150,6 +150,7 @@ set(SHARED_QML_FILES
     SelectionState.qml
     ShadowedIcon.qml
     ShuffleOverlay.qml
+    WheelScroller.qml
 )
 
 set(SHARED_PREFIX_QML_FILES

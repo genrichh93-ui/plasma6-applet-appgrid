@@ -25,6 +25,8 @@ Flickable {
     boundsBehavior: Flickable.StopAtBounds
     PlasmaComponents.ScrollBar.vertical: OverlayScrollBar {}
 
+    WheelScroller { target: pane }
+
     ColumnLayout {
         id: column
         x: pane._margin

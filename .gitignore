@@ -54,6 +54,7 @@ package-panel/contents/ui/SelectionState.qml
 package-panel/contents/ui/ShadowedIcon.qml
 package-panel/contents/ui/SharedFavoritesProvider.qml
 package-panel/contents/ui/ShuffleOverlay.qml
+package-panel/contents/ui/WheelScroller.qml
 package-panel/contents/ui/prefix/
 package-panel/contents/ui/iconanims/
 
