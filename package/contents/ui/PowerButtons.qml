@@ -102,6 +102,13 @@ RowLayout {
             id: slotButton
             required property string modelData
 
+            property bool _menuJustClosed: false
+            Timer {
+                id: menuReopenGuard
+                interval: 300
+                onTriggered: slotButton._menuJustClosed = false
+            }
+
             readonly property bool isSession: modelData === "session"
             readonly property var info: powerButtons.powerSlotInfo[modelData]
             readonly property bool lockShown: sm.canLock && !powerButtons.isHidden("lock")
@@ -151,10 +158,13 @@ RowLayout {
             onClicked: {
                 if (soloSession)
                     powerButtons.runSessionItem(sessionItems[0].id)
-                else if (useSessionMenu)
-                    sessionMenu.visible ? sessionMenu.close() : sessionMenu.open()
-                else
+                else if (useSessionMenu) {
+                    // Open only if this click did not just dismiss the menu.
+                    if (!slotButton._menuJustClosed)
+                        sessionMenu.open()
+                } else {
                     powerButtons.runPowerSlot(modelData)
+                }
             }
 
             Accessible.name: slotLabel
@@ -171,6 +181,13 @@ RowLayout {
                                            powerButtons._sessionMenu = sessionMenu
                 Component.onDestruction: if (powerButtons._sessionMenu === sessionMenu)
                                              powerButtons._sessionMenu = null
+
+                // Fires the moment a dismiss begins (before the button's
+                // click), so the click that closed the menu can't reopen it.
+                onAboutToHide: {
+                    slotButton._menuJustClosed = true
+                    menuReopenGuard.restart()
+                }
 
                 // Instantiator removes a hidden item outright — a
                 // visible:false MenuItem leaves a blank row in the menu.
