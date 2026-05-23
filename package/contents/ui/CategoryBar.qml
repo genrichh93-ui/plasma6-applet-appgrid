@@ -254,16 +254,32 @@ RowLayout {
         Accessible.role: Accessible.Button
     }
 
-    // -- Scroll left arrow --
-    PlasmaComponents.ToolButton {
-        id: scrollLeftBtn
-        visible: catFlick.contentX > 0
-        icon.name: "arrow-left"
+    // -- Scroll left slot --
+    // Reserves a fixed-width slot regardless of state so the bar never
+    // reflows when the arrow appears or disappears. Holds either the
+    // separator (idle) or the arrow button (scrollable).
+    Item {
+        id: scrollLeftSlot
         implicitWidth: Kirigami.Units.iconSizes.small + Kirigami.Units.smallSpacing * 2
-        onClicked: catFlick.contentX = Math.max(0, catFlick.contentX - catFlick.width * 0.5)
+        implicitHeight: scrollLeftBtn.implicitHeight
 
-        Accessible.name: i18nd("dev.xarbit.appgrid", "Scroll categories left")
-        Accessible.role: Accessible.Button
+        Kirigami.Separator {
+            anchors.centerIn: parent
+            width: 1
+            height: parent.height * 0.5
+            visible: !scrollLeftBtn.visible
+        }
+
+        PlasmaComponents.ToolButton {
+            id: scrollLeftBtn
+            anchors.fill: parent
+            visible: catFlick.contentX > 0
+            icon.name: "arrow-left"
+            onClicked: catFlick.contentX = Math.max(0, catFlick.contentX - catFlick.width * 0.5)
+
+            Accessible.name: i18nd("dev.xarbit.appgrid", "Scroll categories left")
+            Accessible.role: Accessible.Button
+        }
     }
 
     // -- Scrollable category buttons --
