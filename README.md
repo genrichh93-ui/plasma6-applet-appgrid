@@ -13,24 +13,35 @@ A grid-style application launcher for KDE Plasma 6. Ships as two plasmoids — a
 
 Website with screenshots, features, FAQ, and install instructions: **[appgrid.xarbit.dev](https://appgrid.xarbit.dev)**. Build instructions, configuration reference, internals, and contributor notes: **[appgrid.xarbit.dev/docs](https://appgrid.xarbit.dev/docs)**.
 
-> [!CAUTION]
-> **Impersonation caution.** A repository at `github.com/RishiT07-op/plasma6-applet-appgrid` is impersonating this project (not a fork, ships an unknown `.zip`, issues disabled). Only install from the official sources listed below. Details + status: [#115](https://github.com/xarbit/plasma6-applet-appgrid/issues/115).
-
 ## Install
+
+Built, signed, and published by the AppGrid maintainer. These are the channels safe to recommend by default.
 
 | Distro | Command |
 |---|---|
-| **Arch Linux + derivatives** (AUR — official) | `yay -S plasma6-applets-appgrid` |
-| **Ubuntu 25.10+** (Launchpad PPA — official) | `sudo add-apt-repository ppa:xarbit/plasma-applet-appgrid && sudo apt install plasma-applet-appgrid` |
-| **Fedora** (Copr — official) | `sudo dnf copr enable scujas/plasma-applet-appgrid && sudo dnf install plasma-applet-appgrid` |
+| **Arch Linux + derivatives** (AUR) | `yay -S plasma6-applets-appgrid` |
+| **Ubuntu 25.10+** (Launchpad PPA) | `sudo add-apt-repository ppa:xarbit/plasma-applet-appgrid && sudo apt install plasma-applet-appgrid` |
+| **Fedora** (Copr) | `sudo dnf copr enable scujas/plasma-applet-appgrid && sudo dnf install plasma-applet-appgrid` |
 | **Immutable distros** (KDE Linux, Kinoite, Bazzite, Aurora, Kalpa, SteamOS) | Universal `~/.local/` tarball — see [INSTALL.TXT](packages/universal/INSTALL.TXT) |
 | **Nix / NixOS** | Flake — see [packages/nix/README.md](packages/nix/README.md) |
-| **openSUSE** (community) | [OBS package by @JMarcosHP01](https://build.opensuse.org/package/show/home:JMarcosHP01/plasma6-applet-appgrid) |
-| **Gentoo** (community) | [Overlay by @mnalmahmud](https://github.com/mnalmahmud/mnalmahmud-overlay) |
 
 After install: right-click the panel launcher → **Show Alternatives** → **AppGrid**.
 
 Full per-distro guide with download links, checksums, and step-by-step terminal commands: **[appgrid.xarbit.dev/#install](https://appgrid.xarbit.dev/#install)**.
+
+### Community packages
+
+Maintained by third-party contributors, **not** by the AppGrid project. They are listed here as a convenience for users of those distros; we do not build, sign, audit, or vet the packages and cannot vouch for what each maintainer ships. Please open issues against the linked overlay/package, not this repo.
+
+| Distro | Source | Maintainer |
+|---|---|---|
+| **openSUSE** | [OBS package](https://build.opensuse.org/package/show/home:JMarcosHP01/plasma6-applet-appgrid) | [@JMarcosHP01](https://github.com/JMarcosHP01) |
+| **Gentoo** | [Overlay](https://github.com/mnalmahmud/mnalmahmud-overlay) | [@mnalmahmud](https://github.com/mnalmahmud) |
+
+If you maintain an AppGrid package for a distro not listed here, open an issue and we will add you.
+
+> [!CAUTION]
+> **Impersonation caution.** A repository at `github.com/RishiT07-op/plasma6-applet-appgrid` is impersonating this project (not a fork, ships an unknown `.zip`, issues disabled). Only install from the official sources listed below. Details + status: [#115](https://github.com/xarbit/plasma6-applet-appgrid/issues/115).
 
 ## Build from source
 
