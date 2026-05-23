@@ -13,6 +13,9 @@ A grid-style application launcher for KDE Plasma 6. Ships as two plasmoids — a
 
 Website with screenshots, features, FAQ, and install instructions: **[appgrid.xarbit.dev](https://appgrid.xarbit.dev)**. Build instructions, configuration reference, internals, and contributor notes: **[appgrid.xarbit.dev/docs](https://appgrid.xarbit.dev/docs)**.
 
+> [!CAUTION]
+> **Impersonation caution.** A repository at `github.com/RishiT07-op/plasma6-applet-appgrid` is impersonating this project (not a fork, ships an unknown `.zip`, issues disabled). Only install from the official sources listed below. Details + status: [#115](https://github.com/xarbit/plasma6-applet-appgrid/issues/115).
+
 ## Install
 
 | Distro | Command |
