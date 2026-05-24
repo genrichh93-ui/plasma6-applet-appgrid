@@ -12,6 +12,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.extras as PlasmaExtras
 import org.kde.plasma.plasmoid
 
 ListView {
@@ -33,6 +34,10 @@ ListView {
 
     property bool animateHighlight: true
     highlightMoveDuration: animateHighlight ? Kirigami.Units.shortDuration : 0
+    highlightResizeDuration: 0
+    // One themed renderer per row, so hover and keyboard-focus never
+    // stack visually (would otherwise reveal a corner mismatch).
+    highlight: PlasmaExtras.Highlight {}
 
     // Suppress hover-select for the first hover after the result set
     // changes — stops the new top row from being re-selected because the
@@ -256,6 +261,8 @@ ListView {
         width: listView.width
         height: Math.max(listView.iconSize, contentItem.implicitHeight) + Kirigami.Units.smallSpacing * 2
         highlighted: listView.currentIndex === model.index
+        // PlasmaExtras.Highlight on the ListView draws all row backgrounds.
+        background: null
         readonly property color labelColor: highlighted
             ? Kirigami.Theme.highlightedTextColor
             : Kirigami.Theme.textColor
@@ -337,16 +344,5 @@ ListView {
             }
         }
 
-        // Keyboard-focus ring — only visible when the row was selected via
-        // arrow keys (highlighted but cursor isn't on it). Distinguishes
-        // keyboard nav from mouse hover.
-        Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-            border.width: 1
-            border.color: Kirigami.Theme.focusColor
-            radius: Kirigami.Units.cornerRadius
-            visible: resultDelegate.highlighted && !rowHover.hovered
-        }
     }
 }
