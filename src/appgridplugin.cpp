@@ -5,7 +5,9 @@
 
 #include "appgridplugin.h"
 
+#include <KDesktopFile>
 #include <KIO/ApplicationLauncherJob>
+#include <KIO/OpenUrlJob>
 #include <KRunner/ResultsModel>
 #include <KService>
 #include <KTerminalLauncherJob>
@@ -382,6 +384,100 @@ void AppGridPlugin::launchAppAction(const QString &storageId, int actionIndex)
         return;
 
     auto *job = new KIO::ApplicationLauncherJob(actions.at(actionIndex));
+    job->start();
+}
+
+bool AppGridPlugin::isDiscoverAvailable() const
+{
+    return static_cast<bool>(KService::serviceByDesktopName(QStringLiteral("org.kde.discover")));
+}
+
+// Maps an AppModel install-source string to the Discover backend name
+// that handles it. Returns empty for sources Discover doesn't manage.
+static QString backendForSource(const QString &source)
+{
+    if (source == QLatin1String("System"))  return QStringLiteral("packagekit");
+    if (source == QLatin1String("Flatpak")) return QStringLiteral("flatpak");
+    if (source == QLatin1String("Snap"))    return QStringLiteral("snap");
+    return {};
+}
+
+// CLI tool the backend talks to. The plugin .so ships with Discover but
+// is non-functional without the tool — return empty for backends that
+// don't have an external dependency to verify.
+static QString toolForBackend(const QString &backend)
+{
+    if (backend == QLatin1String("packagekit")) return QStringLiteral("pkcon");
+    if (backend == QLatin1String("flatpak"))    return QStringLiteral("flatpak");
+    if (backend == QLatin1String("snap"))       return QStringLiteral("snap");
+    return {};
+}
+
+// True when both the Discover backend plugin and its underlying CLI tool
+// are present. Cached per backend — plugin/tool installs during a session
+// are rare and a stale cache only mis-renders one menu item until restart.
+static bool discoverBackendInstalled(const QString &name)
+{
+    static QHash<QString, bool> cache;
+    const auto cached = cache.constFind(name);
+    if (cached != cache.constEnd())
+        return *cached;
+
+    const QString relPath = QStringLiteral("discover/") + name + QStringLiteral("-backend.so");
+    bool pluginFound = false;
+    for (const auto &dir : QCoreApplication::libraryPaths()) {
+        if (QFileInfo::exists(dir + QLatin1Char('/') + relPath)) {
+            pluginFound = true;
+            break;
+        }
+    }
+
+    const QString tool = toolForBackend(name);
+    const bool functional = pluginFound
+        && (tool.isEmpty() || !QStandardPaths::findExecutable(tool).isEmpty());
+    cache.insert(name, functional);
+    return functional;
+}
+
+bool AppGridPlugin::canManageInDiscover(const QString &storageId) const
+{
+    if (storageId.isEmpty() || !isDiscoverAvailable())
+        return false;
+    auto service = KService::serviceByStorageId(storageId);
+    if (!service)
+        return false;
+    const auto resolvedPath = QStandardPaths::locate(
+        QStandardPaths::ApplicationsLocation, service->entryPath());
+    const auto backend = backendForSource(
+        AppModel::detectInstallSource(service->exec(), resolvedPath));
+    return !backend.isEmpty() && discoverBackendInstalled(backend);
+}
+
+void AppGridPlugin::openInDiscover(const QString &storageId)
+{
+    if (storageId.isEmpty() || !isDiscoverAvailable())
+        return;
+
+    // Prefer an explicit X-AppStream-Component declared on the .desktop
+    // file; fall back to the desktop file id (matches Flatpak by
+    // convention and the AppStream metadata distros ship for most
+    // native apps).
+    QString appId;
+    auto service = KService::serviceByStorageId(storageId);
+    if (service) {
+        KDesktopFile desktopFile(service->entryPath());
+        appId = desktopFile.desktopGroup().readEntry("X-AppStream-Component", QString());
+    }
+    if (appId.isEmpty()) {
+        appId = storageId;
+        if (appId.endsWith(QLatin1String(".desktop")))
+            appId.chop(8);
+    }
+
+    // appstream:// is the distro-agnostic entry point — Discover's
+    // registered URL handler resolves the component through whichever
+    // backend (PackageKit, Flatpak, Fwupd) owns it.
+    auto *job = new KIO::OpenUrlJob(QUrl(QStringLiteral("appstream://") + appId));
     job->start();
 }
 

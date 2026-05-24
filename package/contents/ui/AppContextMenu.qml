@@ -226,6 +226,19 @@ Item {
             onClicked: processRunner.runMenuEditor(contextMenu.popupStorageId)
         }
 
+        // Truly-conditional item — Instantiator creates/destroys instead
+        // of visible:false, which leaves a blank row in PlasmaComponents.Menu.
+        Instantiator {
+            active: Plasmoid.canManageInDiscover(contextMenu.popupStorageId)
+            delegate: PlasmaComponents.MenuItem {
+                icon.name: "plasmadiscover"
+                text: i18nd("dev.xarbit.appgrid", "Manage in Discover…")
+                onClicked: Plasmoid.openInDiscover(contextMenu.popupStorageId)
+            }
+            onObjectAdded: (idx, obj) => singleMenu.addItem(obj)
+            onObjectRemoved: (idx, obj) => singleMenu.removeItem(obj)
+        }
+
         PlasmaComponents.MenuSeparator {}
 
         PlasmaComponents.MenuItem {

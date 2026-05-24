@@ -183,6 +183,20 @@ public:
     /** Launch a specific app action by storageId and action index. */
     Q_INVOKABLE void launchAppAction(const QString &storageId, int actionIndex);
 
+    /** True if KDE Discover is installed. Standalone check; per-app
+     *  manageability is queried separately via canManageInDiscover. */
+    Q_INVOKABLE bool isDiscoverAvailable() const;
+
+    /** True if Discover has a backend that can manage the specified
+     *  app (currently PackageKit for native packages, Flatpak for
+     *  Flatpak apps). Used to gate the "Manage in Discover" menu item
+     *  so it only appears for apps Discover will actually open. */
+    Q_INVOKABLE bool canManageInDiscover(const QString &storageId) const;
+
+    /** Open KDE Discover focused on the application identified by
+     *  @p storageId via the appstream:// URL scheme. */
+    Q_INVOKABLE void openInDiscover(const QString &storageId);
+
     /** List directory contents at @p path. Returns a list of {name, path, isDir, icon}. */
     Q_INVOKABLE QVariantList listDirectory(const QString &path);
 
