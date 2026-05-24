@@ -449,9 +449,14 @@ bool AppGridPlugin::canManageInDiscover(const QString &storageId) const
         return false;
     const auto resolvedPath = QStandardPaths::locate(
         QStandardPaths::ApplicationsLocation, service->entryPath());
-    const auto backend = backendForSource(
-        AppModel::detectInstallSource(service->exec(), resolvedPath));
-    return !backend.isEmpty() && discoverBackendInstalled(backend);
+    // 1.8.0 ships the menu only for Flatpak — system (PackageKit) and
+    // Snap routes hit Discover's multi-backend ambiguity that we can't
+    // disambiguate without spawning plasma-discover or pulling in a
+    // dedicated AppStream dep. Tracked in #119.
+    const auto source = AppModel::detectInstallSource(service->exec(), resolvedPath);
+    if (source != QLatin1String("Flatpak"))
+        return false;
+    return discoverBackendInstalled(QStringLiteral("flatpak"));
 }
 
 // --- AppStream component id resolver --------------------------------
