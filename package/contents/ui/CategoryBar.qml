@@ -132,7 +132,7 @@ RowLayout {
     // -- Category action helpers --
 
     function closeCategoryMenu() { catContextMenu.close() }
-    function resetScroll() { catFlick.contentX = 0 }
+    function resetScroll() { _setContentX(0, true) }
 
     function selectAll() {
         if (categoryBar.favoritesActive)
@@ -160,6 +160,86 @@ RowLayout {
         categorySelected(name)
     }
 
+    // Effective viewport width for rightward-scroll math. When at
+    // contentX = 0 the left arrow slot is currently 0 but will
+    // expand right after the scroll, narrowing the viewport — page
+    // and alt+arrow targets computed against the raw width would
+    // leave the landed item half-clipped after the expand.
+    function _viewportWidthAfterRightScroll() {
+        return catFlick.width - (catFlick.contentX <= 0 ? scrollArrowWidth : 0)
+    }
+
+    // Single landing-point for both wheel and arrow clicks. Arms
+    // _anchoredRight when target reaches maxX so contentX stays
+    // glued to the right edge as the left arrow expands afterwards
+    // (which shrinks the viewport and grows maxX) — without it the
+    // right arrow stays visible because contentX falls short of the
+    // new bound. `instant` skips the contentX Behavior so arrow
+    // clicks land in-frame (wheel keeps the slide).
+    function _setContentX(target, instant) {
+        const maxX = Math.max(0, catFlick.contentWidth - catFlick.width)
+        const clamped = Math.max(0, Math.min(maxX, target))
+        catFlick._anchoredRight = (clamped === maxX && maxX > 0)
+        if (instant) {
+            catFlick._suppressContentXAnim = true
+            catFlick.contentX = clamped
+            catFlick._suppressContentXAnim = false
+        } else {
+            catFlick.contentX = clamped
+        }
+    }
+
+    // Page by ~one viewport per click, anchoring the boundary item so
+    // it's fully visible (no half-clip). If the next page would
+    // touch the last/first item at all, snap to the matching bound
+    // so the page lands cleanly and the matching arrow can collapse
+    // on the same click — the Flickable re-clamps automatically when
+    // the arrow slot resizes.
+    function pageRight() {
+        const W = _viewportWidthAfterRightScroll()
+        const tentativeRight = catFlick.contentX + 2 * W
+        var lastFit = -1
+        for (var i = 0; i < catRepeater.count; i++) {
+            var it = catRepeater.itemAt(i)
+            if (!it) continue
+            if (it.x + it.width <= tentativeRight + 1) lastFit = i
+            else break
+        }
+        if (lastFit < 0 || lastFit === catRepeater.count - 1) {
+            _setContentX(catFlick.contentWidth, true)
+            return
+        }
+        var fitItem = catRepeater.itemAt(lastFit)
+        const target = (fitItem.x + fitItem.width) - W + Kirigami.Units.smallSpacing
+        var lastItem = catRepeater.itemAt(catRepeater.count - 1)
+        if (lastItem && lastItem.x < target + W + 1) {
+            _setContentX(catFlick.contentWidth, true)
+            return
+        }
+        _setContentX(target, true)
+    }
+    function pageLeft() {
+        const W = catFlick.width
+        const tentativeLeft = catFlick.contentX - W
+        var firstFit = -1
+        for (var i = 0; i < catRepeater.count; i++) {
+            var it = catRepeater.itemAt(i)
+            if (!it) continue
+            if (it.x >= tentativeLeft - 1) { firstFit = i; break }
+        }
+        if (firstFit <= 0) {
+            _setContentX(0, true)
+            return
+        }
+        const target = catRepeater.itemAt(firstFit).x - Kirigami.Units.smallSpacing
+        var firstItem = catRepeater.itemAt(0)
+        if (firstItem && firstItem.x + firstItem.width > target - 1) {
+            _setContentX(0, true)
+            return
+        }
+        _setContentX(target, true)
+    }
+
     // Scroll the flickable so the currently selected category button is visible
     function scrollToSelected() {
         Qt.callLater(function() {
@@ -167,7 +247,7 @@ RowLayout {
 
             // "All" is selected — scroll to start
             if (active === "") {
-                catFlick.contentX = 0
+                _setContentX(0, true)
                 return
             }
 
@@ -183,11 +263,10 @@ RowLayout {
                     var viewRight = catFlick.contentX + catFlick.width
 
                     if (itemLeft < viewLeft)
-                        catFlick.contentX = Math.max(0, itemLeft - Kirigami.Units.smallSpacing)
+                        _setContentX(itemLeft - Kirigami.Units.smallSpacing, true)
                     else if (itemRight > viewRight)
-                        catFlick.contentX = Math.min(
-                            catFlick.contentWidth - catFlick.width,
-                            itemRight - catFlick.width + Kirigami.Units.smallSpacing)
+                        _setContentX(itemRight - _viewportWidthAfterRightScroll()
+                                                + Kirigami.Units.smallSpacing, true)
                     return
                 }
             }
@@ -204,6 +283,8 @@ RowLayout {
 
     Layout.fillWidth: true
     spacing: Kirigami.Units.smallSpacing
+
+    readonly property int scrollArrowWidth: Kirigami.Units.iconSizes.small + Kirigami.Units.smallSpacing * 2
 
     // -- Favorites (left) --
     PlasmaComponents.ToolButton {
@@ -255,15 +336,27 @@ RowLayout {
     }
 
     // -- Scroll left arrow --
-    // Always rendered; faded + disabled at the start edge. Stable slot
-    // means no layout shift, arrow stays as a discoverable affordance.
+    // The slot animates its width to 0 at the edge so the categories
+    // reclaim the space. visible:false would resize the Flickable in a
+    // single frame mid-scroll and snap contentX; an animated width gives
+    // the layout time to settle smoothly. The edge condition is
+    // pre-computed from contentX so the slot grows back the frame the
+    // user pages off.
     PlasmaComponents.ToolButton {
         id: scrollLeftBtn
-        enabled: catFlick.contentX > 0
-        opacity: enabled ? 1 : 0.9
+        readonly property bool _scrolled: catFlick.contentX > 0
+        enabled: _scrolled
+        opacity: _scrolled ? 1 : 0
+        implicitWidth: _scrolled ? categoryBar.scrollArrowWidth : 0
         icon.name: "arrow-left"
-        implicitWidth: Kirigami.Units.iconSizes.small + Kirigami.Units.smallSpacing * 2
-        onClicked: catFlick.contentX = Math.max(0, catFlick.contentX - catFlick.width)
+        onClicked: categoryBar.pageLeft()
+
+        Behavior on implicitWidth {
+            NumberAnimation { duration: Kirigami.Units.shortDuration; easing.type: Easing.OutCubic }
+        }
+        Behavior on opacity {
+            NumberAnimation { duration: Kirigami.Units.shortDuration }
+        }
 
         Accessible.name: i18nd("dev.xarbit.appgrid", "Scroll categories left")
         Accessible.role: Accessible.Button
@@ -279,6 +372,29 @@ RowLayout {
         clip: true
         flickableDirection: Flickable.HorizontalFlick
         boundsBehavior: Flickable.StopAtBounds
+
+        // Arrow slots animate width when they collapse / expand, which
+        // changes this Flickable's available width mid-scroll. When
+        // _setContentX armed _anchoredRight, glue contentX to the
+        // moving maxX in-frame (suppressing the contentX Behavior)
+        // so the categories appear stationary while the viewport
+        // stretches around them. Otherwise just clamp normally.
+        property bool _anchoredRight: false
+        property bool _suppressContentXAnim: false
+        onWidthChanged: {
+            if (_anchoredRight) {
+                const maxX = Math.max(0, contentWidth - width)
+                _suppressContentXAnim = true
+                contentX = maxX
+                _suppressContentXAnim = false
+                if (maxX === 0)
+                    _anchoredRight = false
+            } else {
+                returnToBounds()
+            }
+        }
+        onFlickStarted: _anchoredRight = false
+        onMovementStarted: _anchoredRight = false
 
         // Edge-settling guard for #113: once a wheel lands on either edge,
         // swallow follow-up wheels for a short window so rapid scrolling
@@ -297,10 +413,9 @@ RowLayout {
                 if (catFlick._wheelEdgeSettling)
                     return
                 const delta = wheel.angleDelta.y !== 0 ? wheel.angleDelta.y : wheel.angleDelta.x
+                categoryBar._setContentX(catFlick.contentX - delta)
                 const maxX = Math.max(0, catFlick.contentWidth - catFlick.width)
-                const target = Math.max(0, Math.min(maxX, catFlick.contentX - delta))
-                catFlick.contentX = target
-                if (target === 0 || target === maxX) {
+                if (catFlick.contentX === 0 || catFlick.contentX === maxX) {
                     catFlick._wheelEdgeSettling = true
                     wheelEdgeSettlingTimer.restart()
                 }
@@ -308,7 +423,7 @@ RowLayout {
         }
 
         Behavior on contentX {
-            enabled: Kirigami.Units.longDuration > 0
+            enabled: !catFlick._suppressContentXAnim && Kirigami.Units.longDuration > 0
             NumberAnimation {
                 duration: Kirigami.Units.longDuration
                 easing.type: Easing.OutCubic
@@ -369,21 +484,22 @@ RowLayout {
         }
     }
 
-    // -- Scroll right arrow --
-    // Fade with opacity rather than collapse with visible: false — visible
-    // toggling removes the button from the parent RowLayout mid-scroll,
-    // growing catFlick at the moment the user lands on the right edge and
-    // visibly overshooting the new max. Left arrow can use visible:false
-    // safely because the layout shift there happens at idle (contentX = 0).
+    // -- Scroll right arrow -- same animated slot as the left.
     PlasmaComponents.ToolButton {
         id: scrollRightBtn
-        enabled: catFlick.contentX + catFlick.width < catFlick.contentWidth - 1
-        opacity: enabled ? 1 : 0.9
+        readonly property bool _scrollable: catFlick.contentX + catFlick.width < catFlick.contentWidth - 1
+        enabled: _scrollable
+        opacity: _scrollable ? 1 : 0
+        implicitWidth: _scrollable ? categoryBar.scrollArrowWidth : 0
         icon.name: "arrow-right"
-        implicitWidth: Kirigami.Units.iconSizes.small + Kirigami.Units.smallSpacing * 2
-        onClicked: catFlick.contentX = Math.min(
-            catFlick.contentWidth - catFlick.width,
-            catFlick.contentX + catFlick.width)
+        onClicked: categoryBar.pageRight()
+
+        Behavior on implicitWidth {
+            NumberAnimation { duration: Kirigami.Units.shortDuration; easing.type: Easing.OutCubic }
+        }
+        Behavior on opacity {
+            NumberAnimation { duration: Kirigami.Units.shortDuration }
+        }
 
         Accessible.name: i18nd("dev.xarbit.appgrid", "Scroll categories right")
         Accessible.role: Accessible.Button

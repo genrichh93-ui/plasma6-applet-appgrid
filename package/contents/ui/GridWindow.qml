@@ -216,6 +216,7 @@ Window {
     function closeGrid() {
         closeOnDeactivate = false
         deactivateGuard.stop()
+        panel.resetOnClose()
         Plasmoid.setBlurBehind(root, false, 0, 0, 0, 0, 0)
         if (animationsEnabled && animStyle !== 0 && animLoader.item) {
             dimFadeOut.start()

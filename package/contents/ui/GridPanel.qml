@@ -385,11 +385,18 @@ Kirigami.ShadowedRectangle {
     }
 
 
+    // Reset the category bar scroll on close so reopening lands on
+    // the start instead of replaying the previous session's position.
+    // Done on close (not open) so the slide is invisible behind the
+    // fade-out instead of flashing on every open.
+    function resetOnClose() {
+        categoryBar.resetScroll()
+    }
+
     // -- Reset state (called when showing the grid) --
     function resetState() {
         contextMenu.close()
         categoryBar.closeCategoryMenu()
-        categoryBar.resetScroll()
         powerButtons.closeMenus()
         searchBar.text = ""
 

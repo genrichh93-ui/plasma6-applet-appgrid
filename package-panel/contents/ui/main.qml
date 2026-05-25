@@ -68,6 +68,8 @@ PlasmoidItem {
                         panel.resetState()
                         if (Plasmoid.configuration.shakeOnOpen)
                             panel.shakeAllIcons()
+                    } else {
+                        panel.resetOnClose()
                     }
                 }
             }
