@@ -129,6 +129,12 @@ set(SHARED_QML_FILES
     AppIconDelegate.qml
     CategoryBar.qml
     CategoryGridView.qml
+    ConfigAnimations.qml
+    ConfigAppearance.qml
+    ConfigGeneral.qml
+    ConfigHiddenApps.qml
+    ConfigSearch.qml
+    ConfigSession.qml
     DragSource.qml
     EdgeAutoScroller.qml
     FavoritesReorderArea.qml
