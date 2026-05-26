@@ -43,11 +43,13 @@ Window {
 
     // User vertical nudge for the centered panel. The config value is a
     // percent (-100 = top, 0 = centered, +100 = bottom) of the free space
-    // between the panel and the screen edge, so it scales across screen
-    // sizes and can never push the panel off-screen.
+    // between the full panel and the screen edge, so it scales across
+    // screen sizes and can never push the panel off-screen. Uses the full
+    // panelHeight (not panel.height) so the compact-mode height animation
+    // doesn't drag the panel up or down as it expands.
     readonly property real panelVerticalOffset: {
         var pct = Plasmoid.configuration.verticalOffset || 0
-        var slack = Math.max(0, (root.height - panel.height) / 2)
+        var slack = Math.max(0, (root.height - panel.panelHeight) / 2)
         return Math.round(pct / 100 * slack)
     }
 
@@ -71,7 +73,9 @@ Window {
         const ph = Math.round(panel.height)
         return {
             x: Math.round((root.width - pw) / 2),
-            y: Math.round((root.height - ph) / 2) + root.panelVerticalOffset,
+            y: Math.round((root.height - ph) / 2)
+               + root.panelVerticalOffset
+               + Math.round(panel.compactShift),
             w: pw,
             h: ph
         }
@@ -88,6 +92,18 @@ Window {
 
     onWidthChanged: if (visible && (!animLoader.item || animLoader.item.blurBeforeAnimation)) applyBlur()
     onHeightChanged: if (visible && (!animLoader.item || animLoader.item.blurBeforeAnimation)) applyBlur()
+
+    // Compact-mode height animation changes panel.height while the overlay
+    // window stays screen-sized; re-clip the blur region with it. No
+    // open/close gate — the height animation runs after open finishes and
+    // that gate would suppress the blur reapply mid-resize.
+    Connections {
+        target: panel
+        function onHeightChanged() {
+            if (root.visible)
+                root.applyBlur()
+        }
+    }
 
     // -----------------------------------------------------------------------
     // Grid lifecycle
@@ -316,9 +332,12 @@ Window {
     GridPanel {
         id: panel
         anchors.centerIn: parent
-        // Static user offset, kept out of the anchor system so the open/close
-        // animations (which drive anchors.verticalCenterOffset) are unaffected.
-        transform: Translate { y: root.panelVerticalOffset }
+        // Static user offset + compact-mode downward shift, kept out of
+        // the anchor system so the open/close animations (which drive
+        // anchors.verticalCenterOffset) are unaffected.
+        transform: Translate {
+            y: root.panelVerticalOffset + panel.compactShift
+        }
         opacity: 0.0
         transformOrigin: Item.Center
         appletInterface: root.appletInterface

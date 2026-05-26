@@ -47,6 +47,7 @@ Kirigami.ShadowedRectangle {
     readonly property bool cfgShowNewAppBadge: Plasmoid.configuration.showNewAppBadge !== false
     readonly property bool cfgHideLabelsOnFavorites: Plasmoid.configuration.hideLabelsOnFavorites === true
     readonly property bool cfgUseExtraRunners: Plasmoid.configuration.useExtraRunners !== false
+    readonly property bool cfgHideGridWhenEmpty: Plasmoid.configuration.hideGridWhenEmpty === true
 
     // -- Sort helpers --
     readonly property bool isSortByCategory: sortMode === 2
@@ -54,10 +55,21 @@ Kirigami.ShadowedRectangle {
     // -- View state --
     readonly property bool isSearching: searchBar.text.length > 0
     readonly property bool isFavoritesActive: categoryBar.favoritesActive
+    // hideGridWhenEmpty: Compact mode — suppress grid/category chrome
+    // until the user types. Search and prefix views still take over once
+    // the user starts entering text. _gridRevealed lets the user pop the
+    // grid open manually (Down arrow from the search bar) without typing.
+    property bool _gridRevealed: false
+    readonly property bool _emptyHiddenState: !nativePopup && cfgHideGridWhenEmpty
+                                              && !isSearching && !isPrefixMode
+                                              && !_gridRevealed
     readonly property bool showCatBar: cfgShowCategoryBar && !isSearching && !isPrefixMode
+                                       && !_emptyHiddenState
     readonly property bool showCategoryGrid: isSortByCategory && !isFavoritesActive
                                              && !isSearching && !isPrefixMode
+                                             && !_emptyHiddenState
     readonly property bool showAppGrid: !isSearching && !isPrefixMode && !showCategoryGrid
+                                        && !_emptyHiddenState
     readonly property bool showSearchResults: isSearching && !isPrefixMode
 
     readonly property string currentResultIcon: {
@@ -108,9 +120,27 @@ Kirigami.ShadowedRectangle {
     readonly property real headerHeight: Kirigami.Units.gridUnit * 5
     readonly property real panelWidth: estCellWidth * columns + panelMargin * 2
     readonly property real panelHeight: estCellHeight * rows + panelMargin * 2 + headerHeight
+    // Compact mode height — just the search bar + margins.
+    readonly property real compactHeight: headerHeight + panelMargin * 2
+    readonly property real effectiveHeight: _emptyHiddenState ? compactHeight : panelHeight
+    // Half the delta between current and compact heights — compact mode
+    // expands the panel downward by this amount, keeping the search bar
+    // pinned where it sat when compact. Consumed by GridWindow for the
+    // panel translate and the blur clip; zero when the feature is off.
+    readonly property real compactShift: cfgHideGridWhenEmpty
+        ? (height - compactHeight) / 2
+        : 0
 
     width: Math.min(panelWidth, Screen.width * 0.9)
-    height: Math.min(panelHeight, Screen.height * 0.9)
+    height: Math.min(effectiveHeight, Screen.height * 0.9)
+
+    Behavior on height {
+        enabled: cfgHideGridWhenEmpty
+        NumberAnimation {
+            duration: Kirigami.Units.longDuration
+            easing.type: Easing.OutCubic
+        }
+    }
 
     Layout.preferredWidth: width
     Layout.preferredHeight: height
@@ -141,6 +171,17 @@ Kirigami.ShadowedRectangle {
 
     Kirigami.Theme.colorSet: Kirigami.Theme.View
     Kirigami.Theme.inherit: false
+
+    // Compact mode: scrolling anywhere on the compact panel reveals the
+    // grid, mirroring the Down-arrow behavior.
+    WheelHandler {
+        enabled: panel._emptyHiddenState
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+        onWheel: function(event) {
+            panel._gridRevealed = true
+            event.accepted = true
+        }
+    }
 
     // -- Launch counts serialization helpers --
     function launchCountsToMap(list) {
@@ -421,6 +462,7 @@ Kirigami.ShadowedRectangle {
         appGrid.recentIndex = -1
         searchResultsList.contentY = searchResultsList.originY
         searchResultsList.currentIndex = 0
+        _gridRevealed = false
         categoryGridView.contentY = 0
         categoryGridView.clearSelection()
         categoryGridView.currentIndex = -1
@@ -617,6 +659,9 @@ Kirigami.ShadowedRectangle {
                     if (panel.prefixMode === "files") {
                         prefixModeView.focusFileList()
                         return
+                    }
+                    if (panel._emptyHiddenState) {
+                        panel._gridRevealed = true
                     }
                     navigateToResults()
                 }

@@ -26,6 +26,7 @@ KCM.SimpleKCM {
     property alias cfg_dimBackground: dimBackground.checked
     property alias cfg_overrideRadius: overrideRadius.checked
     property alias cfg_cornerRadius: cornerRadius.value
+    property alias cfg_hideGridWhenEmpty: hideGridWhenEmpty.checked
 
     Kirigami.FormLayout {
         QQC2.CheckBox {
@@ -91,6 +92,18 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Radius (px):")
             enabled: overrideRadius.checked
             from: 0; to: 60
+        }
+
+        Item {
+            visible: !page.isPanel
+            Kirigami.FormData.isSection: true
+        }
+
+        QQC2.CheckBox {
+            id: hideGridWhenEmpty
+            visible: !page.isPanel
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Compact mode:")
+            text: i18nd("dev.xarbit.appgrid", "Hide app grid until I start typing")
         }
     }
 }

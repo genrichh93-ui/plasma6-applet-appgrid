@@ -114,6 +114,10 @@
       <label>Whether search covers all apps regardless of active category or favorites filter.</label>
       <default>true</default>
     </entry>
+    <entry name="hideGridWhenEmpty" type="Bool">
+      <label>Compact mode: hide the app grid and category bar until the user types something.</label>
+      <default>false</default>
+    </entry>
     <entry name="startWithFavorites" type="Bool">
       <label>Whether to show the favorites tab by default when opening the launcher.</label>
       <default>false</default>
