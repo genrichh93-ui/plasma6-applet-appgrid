@@ -46,19 +46,16 @@ ListView {
     highlight: PlasmaExtras.Highlight {}
 
     // --- Hover-select gating ---
-    // pointChanged also fires on clicks (same pixel, button-state) and on
-    // rows that scroll under a stationary cursor — the position cache
-    // rejects both. Wheel events flip an override so the highlight does
-    // follow the cursor while wheel-scrolling. Count snap re-establishes
-    // the top match on every search-query change because a hover-set
-    // currentIndex breaks the `count > 0 ? 0 : -1` binding.
+    // HoverGate decides whether a pointChanged event should claim the
+    // highlight; see HoverGate.qml. Count snap re-establishes the top
+    // match on every search-query change because a hover-set currentIndex
+    // breaks the `count > 0 ? 0 : -1` binding.
 
-    property point _lastHoverPos: Qt.point(-1, -1)
-    property double _lastWheelTime: 0
+    HoverGate { id: hoverGate }
 
     WheelScroller {
         target: listView
-        onWheel: listView._lastWheelTime = Date.now()
+        onWheel: hoverGate.markWheel()
     }
 
     onCountChanged: {
@@ -67,12 +64,7 @@ ListView {
     }
 
     function _tryHoverSelect(row, pointerY, idx, scenePos) {
-        const sentinel = _lastHoverPos.x < 0
-        const samePos = Math.abs(scenePos.x - _lastHoverPos.x) < 1
-                     && Math.abs(scenePos.y - _lastHoverPos.y) < 1
-        const wheelActive = Date.now() - _lastWheelTime < 500
-        _lastHoverPos = scenePos
-        if ((sentinel || samePos) && !wheelActive)
+        if (!hoverGate.allows(scenePos))
             return
 
         const top = row.mapToItem(listView, 0, 0).y
