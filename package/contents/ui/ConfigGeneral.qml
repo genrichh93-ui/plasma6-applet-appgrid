@@ -9,39 +9,80 @@ import QtQuick.Layouts
 
 import org.kde.draganddrop as DragDrop
 import org.kde.iconthemes as KIconThemes
-import org.kde.kcmutils as KCM
+import org.kde.kcmutils as KCMUtils
 import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 
-KCM.SimpleKCM {
-    id: page
+KCMUtils.SimpleKCM {
+    id: configGeneral
 
-    readonly property bool isPanel: Plasmoid.pluginName === "dev.xarbit.appgrid.panel"
-    readonly property string defaultIcon: "dev.xarbit.appgrid"
-
+    // --- Config bindings (cfg_ prefix is required by Plasma KCM framework) ---
     property string cfg_icon: Plasmoid.configuration.icon
     property bool cfg_useCustomButtonImage: Plasmoid.configuration.useCustomButtonImage
     property string cfg_customButtonImage: Plasmoid.configuration.customButtonImage
-    property string cfg_menuLabel: Plasmoid.configuration.menuLabel
     property alias cfg_gridColumns: gridColumns.value
     property alias cfg_gridRows: gridRows.value
     property alias cfg_iconSize: iconSize.currentIndex
     property alias cfg_sortMode: sortMode.currentIndex
-    property alias cfg_showCategoryBar: showCategoryBar.checked
-    property alias cfg_startWithFavorites: startWithFavorites.checked
+    property alias cfg_overrideRadius: overrideRadius.checked
+    property alias cfg_cornerRadius: cornerRadius.value
+    property alias cfg_showDividers: showDividers.checked
+    property alias cfg_showScrollbars: showScrollbars.checked
+    property alias cfg_showTooltips: showTooltips.checked
+    property alias cfg_showNewAppBadge: showNewAppBadge.checked
+    property alias cfg_iconShadow: iconShadow.checked
     property alias cfg_hideLabelsOnFavorites: hideLabelsOnFavorites.checked
     property alias cfg_sortFavoritesAlphabetically: sortFavoritesAlphabetically.checked
+    property alias cfg_backgroundOpacity: backgroundOpacity.value
+    property alias cfg_openAnimation: openAnimation.currentIndex
+    property alias cfg_enableBlur: enableBlur.checked
+    property alias cfg_dimBackground: dimBackground.checked
+    property alias cfg_verticalOffset: verticalOffset.value
+    property alias cfg_openOnActiveScreen: openOnActiveScreen.checked
+    property alias cfg_showCategoryBar: showCategoryBar.checked
+    property alias cfg_searchAll: searchAll.checked
+    property alias cfg_startWithFavorites: startWithFavorites.checked
+    property alias cfg_shakeOnOpen: shakeOnOpen.checked
+    property alias cfg_hoverAnimation: hoverAnimation.currentIndex
+    property alias cfg_showActionLabels: showActionLabels.checked
+    property var cfg_powerButtonOrder: Plasmoid.configuration.powerButtonOrder
+    property var cfg_powerButtonsHidden: Plasmoid.configuration.powerButtonsHidden
     property alias cfg_showRecentApps: showRecentApps.checked
+    property alias cfg_checkForUpdates: checkForUpdates.checked
+    property alias cfg_useExtraRunners: useExtraRunners.checked
     property alias cfg_useSystemCategories: useSystemCategories.checked
     property alias cfg_hideEmptyCategories: hideEmptyCategories.checked
-    property alias cfg_openOnActiveScreen: openOnActiveScreen.checked
-    property alias cfg_verticalOffset: verticalOffset.value
-    property alias cfg_checkForUpdates: checkForUpdates.checked
+    property string cfg_menuLabel: Plasmoid.configuration.menuLabel
     property string cfg_terminalShell: Plasmoid.configuration.terminalShell
+    property var cfg_hiddenApps: Plasmoid.configuration.hiddenApps
+
+    // Default icon defined in main.xml — single source of truth for fallback.
+    readonly property string defaultIcon: "dev.xarbit.appgrid"
+
+    // ListModel mirror for cfg_hiddenApps (StringList doesn't work directly as Repeater model).
+    ListModel { id: hiddenAppsModel }
+    Component.onCompleted: syncHiddenModel()
+    onCfg_hiddenAppsChanged: syncHiddenModel()
+
+    function syncHiddenModel() {
+        hiddenAppsModel.clear()
+        var apps = cfg_hiddenApps
+        if (apps && apps.length) {
+            for (var i = 0; i < apps.length; i++) {
+                if (apps[i] !== "")
+                    hiddenAppsModel.append({ storageId: apps[i] })
+            }
+        }
+    }
 
     Kirigami.FormLayout {
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        // --- Icon picker ---
+
         QQC2.Button {
             id: iconButton
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Icon:")
@@ -74,8 +115,8 @@ KCM.SimpleKCM {
             KIconThemes.IconDialog {
                 id: iconDialog
                 function setCustomButtonImage(image) {
-                    page.cfg_customButtonImage = image || page.cfg_icon || page.defaultIcon
-                    page.cfg_useCustomButtonImage = true;
+                    configGeneral.cfg_customButtonImage = image || configGeneral.cfg_icon || configGeneral.defaultIcon
+                    configGeneral.cfg_useCustomButtonImage = true;
                 }
                 onIconNameChanged: iconName => setCustomButtonImage(iconName)
             }
@@ -93,9 +134,9 @@ KCM.SimpleKCM {
                     anchors.centerIn: parent
                     width: Kirigami.Units.iconSizes.large
                     height: width
-                    source: page.cfg_useCustomButtonImage
-                            ? page.cfg_customButtonImage
-                            : page.cfg_icon
+                    source: configGeneral.cfg_useCustomButtonImage
+                            ? configGeneral.cfg_customButtonImage
+                            : configGeneral.cfg_icon
                 }
             }
 
@@ -105,7 +146,7 @@ KCM.SimpleKCM {
                 onClosed: iconButton.checked = false
 
                 QQC2.MenuItem {
-                    text: i18ndc("dev.xarbit.appgrid", "@item:inmenu Open icon chooser dialog", "Choose…")
+                    text: i18ndc("dev.xarbit.appgrid", "@item:inmenu Open icon chooser dialog", "Choose\u2026")
                     icon.name: "document-open-folder"
                     onClicked: iconDialog.open()
                 }
@@ -113,9 +154,9 @@ KCM.SimpleKCM {
                     text: i18ndc("dev.xarbit.appgrid", "@item:inmenu Reset icon to default", "Clear Icon")
                     icon.name: "edit-clear"
                     onClicked: {
-                        page.cfg_icon = page.defaultIcon
-                        page.cfg_customButtonImage = ""
-                        page.cfg_useCustomButtonImage = false
+                        configGeneral.cfg_icon = configGeneral.defaultIcon
+                        configGeneral.cfg_customButtonImage = ""
+                        configGeneral.cfg_useCustomButtonImage = false
                     }
                 }
             }
@@ -125,42 +166,46 @@ KCM.SimpleKCM {
             id: menuLabel
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Text label:")
             Layout.fillWidth: true
-            Layout.minimumWidth: Kirigami.Units.gridUnit * 14
             placeholderText: i18nd("dev.xarbit.appgrid", "Type here to add a text label")
-            text: page.cfg_menuLabel
-            onTextChanged: page.cfg_menuLabel = text
+            text: configGeneral.cfg_menuLabel
+            onTextChanged: configGeneral.cfg_menuLabel = text
             enabled: Plasmoid.formFactor !== PlasmaCore.Types.Vertical
             rightActions: Kirigami.Action {
                 icon.name: "edit-clear"
                 visible: menuLabel.text.length > 0
-                onTriggered: page.cfg_menuLabel = ""
+                onTriggered: configGeneral.cfg_menuLabel = ""
             }
         }
+
+        // --- Grid size ---
 
         Item { Kirigami.FormData.isSection: true }
 
         QQC2.SpinBox {
             id: gridColumns
-            visible: !page.isPanel
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Icons per row:")
             from: 3; to: 10
         }
+
         QQC2.SpinBox {
             id: gridRows
-            visible: !page.isPanel
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Visible rows:")
             from: 2; to: 10
         }
+
         QQC2.ComboBox {
             id: iconSize
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Icon size:")
             model: [i18nd("dev.xarbit.appgrid", "Small"), i18nd("dev.xarbit.appgrid", "Medium"), i18nd("dev.xarbit.appgrid", "Large")]
         }
+
         QQC2.ComboBox {
             id: sortMode
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Sort order:")
             model: [i18nd("dev.xarbit.appgrid", "Alphabetical"), i18nd("dev.xarbit.appgrid", "Most Used"), i18nd("dev.xarbit.appgrid", "By Category")]
         }
+
+        // --- Appearance ---
 
         Item { Kirigami.FormData.isSection: true }
 
@@ -169,96 +214,375 @@ KCM.SimpleKCM {
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Behavior:")
             text: i18nd("dev.xarbit.appgrid", "Show category bar")
         }
+
+        QQC2.CheckBox {
+            id: hidePanelIcon
+            text: i18nd("dev.xarbit.appgrid", "Hide panel icon (WaveTask integration)")
+            checked: Plasmoid.configuration.icon === "hidden"
+            onCheckedChanged: {
+                if (checked) {
+                    Plasmoid.configuration.icon = "hidden";
+                } else if (Plasmoid.configuration.icon === "hidden") {
+                    Plasmoid.configuration.icon = "dev.xarbit.appgrid";
+                }
+            }
+        }
+
+        QQC2.CheckBox {
+            id: openOnActiveScreen
+            text: i18nd("dev.xarbit.appgrid", "Open on screen with mouse focus (otherwise on panel screen)")
+        }
+
+        QQC2.CheckBox {
+            id: searchAll
+            text: i18nd("dev.xarbit.appgrid", "Search all apps regardless of active tab")
+        }
+
+        QQC2.CheckBox {
+            id: useExtraRunners
+            text: i18nd("dev.xarbit.appgrid", "Use KDE search plugins (KRunner)")
+            QQC2.ToolTip.text: i18nd("dev.xarbit.appgrid", "Includes the calculator, unit conversion, file search, bookmarks, web shortcuts and other KRunner plugins. Use \"Configure Search Plugins\" to choose which are active.")
+            QQC2.ToolTip.visible: hovered
+            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+        }
+
+        QQC2.Button {
+            text: i18nd("dev.xarbit.appgrid", "Configure Search Plugins…")
+            icon.name: "settings-configure"
+            enabled: useExtraRunners.checked
+            onClicked: KCMUtils.KCMLauncher.openSystemSettings("kcm_plasmasearch")
+        }
+
         QQC2.CheckBox {
             id: startWithFavorites
             text: i18nd("dev.xarbit.appgrid", "Start with favorites tab")
             enabled: showCategoryBar.checked
         }
-        QQC2.CheckBox {
-            id: hideLabelsOnFavorites
-            text: i18nd("dev.xarbit.appgrid", "Hide app labels on favorites tab")
-            enabled: showCategoryBar.checked
-        }
-        QQC2.CheckBox {
-            id: sortFavoritesAlphabetically
-            text: i18nd("dev.xarbit.appgrid", "Sort favorites alphabetically")
-        }
+
         QQC2.CheckBox {
             id: showRecentApps
             text: i18nd("dev.xarbit.appgrid", "Show recently used applications")
             enabled: sortMode.currentIndex !== 1 || startWithFavorites.checked
         }
+
         QQC2.CheckBox {
             id: useSystemCategories
             text: i18nd("dev.xarbit.appgrid", "Use system categories (supports KDE Menu Editor)")
             enabled: showCategoryBar.checked
         }
+
         QQC2.CheckBox {
             id: hideEmptyCategories
             text: i18nd("dev.xarbit.appgrid", "Hide empty categories")
             enabled: showCategoryBar.checked
         }
+
+        // Hidden on distro-package builds — package manager handles updates.
         QQC2.CheckBox {
-            id: openOnActiveScreen
-            visible: !page.isPanel
-            text: i18nd("dev.xarbit.appgrid", "Open on screen with mouse focus (otherwise on panel screen)")
+            id: checkForUpdates
+            visible: Plasmoid.isUniversalBuild === true
+            text: i18nd("dev.xarbit.appgrid", "Check the AppGrid website for new releases")
+            QQC2.ToolTip.text: i18nd("dev.xarbit.appgrid", "Anonymous request once per day to %1. Shows an indicator near the session buttons when a new version is available; no automatic install.").arg("https://appgrid.xarbit.dev/api/latest.json")
+            QQC2.ToolTip.visible: hovered
+            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
         }
-
-        Item {
-            visible: !page.isPanel
-            Kirigami.FormData.isSection: true
-        }
-
-        QQC2.Slider {
-            id: verticalOffset
-            visible: !page.isPanel
-            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Vertical position:")
-            from: -100; to: 100; stepSize: 25
-            snapMode: QQC2.Slider.SnapAlways
-            Layout.fillWidth: true
-            Layout.minimumWidth: Kirigami.Units.gridUnit * 14
-        }
-
-        Item { Kirigami.FormData.isSection: true }
 
         QQC2.ComboBox {
             id: terminalShell
             Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Terminal shell:")
             Layout.fillWidth: true
-            Layout.minimumWidth: Kirigami.Units.gridUnit * 14
             model: {
                 var shells = Plasmoid.availableShells ? Plasmoid.availableShells() : []
                 return [i18nd("dev.xarbit.appgrid", "Default (/bin/sh)")].concat(shells)
             }
             currentIndex: {
-                if (!page.cfg_terminalShell) return 0
+                if (!configGeneral.cfg_terminalShell) return 0
                 var shells = Plasmoid.availableShells ? Plasmoid.availableShells() : []
-                var idx = shells.indexOf(page.cfg_terminalShell)
+                var idx = shells.indexOf(configGeneral.cfg_terminalShell)
                 return idx >= 0 ? idx + 1 : 0
             }
             onActivated: function(index) {
-                if (index === 0) {
-                    page.cfg_terminalShell = ""
-                } else {
+                if (index === 0)
+                    configGeneral.cfg_terminalShell = ""
+                else {
                     var shells = Plasmoid.availableShells ? Plasmoid.availableShells() : []
-                    page.cfg_terminalShell = shells[index - 1] || ""
+                    configGeneral.cfg_terminalShell = shells[index - 1] || ""
                 }
             }
         }
 
-        Item {
-            visible: Plasmoid.isUniversalBuild === true
-            Kirigami.FormData.isSection: true
+        QQC2.CheckBox {
+            id: showDividers
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Appearance:")
+            text: i18nd("dev.xarbit.appgrid", "Show divider lines")
         }
 
         QQC2.CheckBox {
-            id: checkForUpdates
-            visible: Plasmoid.isUniversalBuild === true
-            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Updates:")
-            text: i18nd("dev.xarbit.appgrid", "Check the AppGrid website for new releases")
-            QQC2.ToolTip.text: i18nd("dev.xarbit.appgrid", "Anonymous request once per day to %1. Shows an indicator near the session buttons when a new version is available; no automatic install.").arg("https://appgrid.xarbit.dev/api/latest.json")
-            QQC2.ToolTip.visible: hovered
-            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+            id: showScrollbars
+            text: i18nd("dev.xarbit.appgrid", "Show scrollbars")
+        }
+
+        QQC2.CheckBox {
+            id: showTooltips
+            text: i18nd("dev.xarbit.appgrid", "Show tooltips on hover")
+        }
+
+        QQC2.CheckBox {
+            id: showNewAppBadge
+            text: i18nd("dev.xarbit.appgrid", "Show new app badge")
+        }
+
+        QQC2.CheckBox {
+            id: iconShadow
+            text: i18nd("dev.xarbit.appgrid", "Drop shadow behind app icons")
+        }
+
+        QQC2.CheckBox {
+            id: hideLabelsOnFavorites
+            text: i18nd("dev.xarbit.appgrid", "Hide app labels on favorites tab")
+            enabled: showCategoryBar.checked
+        }
+
+        QQC2.CheckBox {
+            id: sortFavoritesAlphabetically
+            text: i18nd("dev.xarbit.appgrid", "Sort favorites alphabetically")
+        }
+
+        QQC2.ComboBox {
+            id: openAnimation
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Open/close animation:")
+            model: [i18nd("dev.xarbit.appgrid", "None"), i18nd("dev.xarbit.appgrid", "Fade"), i18nd("dev.xarbit.appgrid", "Scale"), i18nd("dev.xarbit.appgrid", "Pop"), i18nd("dev.xarbit.appgrid", "Slide Up"), i18nd("dev.xarbit.appgrid", "Slide Down"), i18nd("dev.xarbit.appgrid", "Glide"), i18nd("dev.xarbit.appgrid", "Buzz"), i18nd("dev.xarbit.appgrid", "Twist"), i18nd("dev.xarbit.appgrid", "Slam"), i18nd("dev.xarbit.appgrid", "Grow Up")]
+        }
+
+        QQC2.CheckBox {
+            id: enableBlur
+            text: i18nd("dev.xarbit.appgrid", "Enable background blur")
+        }
+
+        QQC2.CheckBox {
+            id: dimBackground
+            text: i18nd("dev.xarbit.appgrid", "Dim background behind launcher")
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Vertical position:")
+
+            QQC2.Slider {
+                id: verticalOffset
+                from: -100; to: 100; stepSize: 25
+                snapMode: QQC2.Slider.SnapAlways
+                Layout.fillWidth: true
+            }
+
+            QQC2.Label {
+                text: verticalOffset.value === 0
+                      ? i18nd("dev.xarbit.appgrid", "Centered")
+                      : verticalOffset.value < 0
+                        ? i18nd("dev.xarbit.appgrid", "Up %1%", Math.round(-verticalOffset.value))
+                        : i18nd("dev.xarbit.appgrid", "Down %1%", Math.round(verticalOffset.value))
+                Layout.minimumWidth: Kirigami.Units.gridUnit * 5
+            }
+        }
+
+        QQC2.ComboBox {
+            id: hoverAnimation
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Icon animation:")
+            model: [i18nd("dev.xarbit.appgrid", "None"), i18nd("dev.xarbit.appgrid", "Shake"), i18nd("dev.xarbit.appgrid", "Grow"), i18nd("dev.xarbit.appgrid", "Bounce"), i18nd("dev.xarbit.appgrid", "Spin"), i18nd("dev.xarbit.appgrid", "Shuffle")]
+        }
+
+        QQC2.CheckBox {
+            id: shakeOnOpen
+            text: i18nd("dev.xarbit.appgrid", "Animate icons on open")
+            enabled: hoverAnimation.currentIndex > 0
+        }
+
+        PowerButtonsConfig {
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Power & session buttons:")
+            Kirigami.FormData.labelAlignment: Qt.AlignTop
+            Layout.fillWidth: true
+            buttonOrder: configGeneral.cfg_powerButtonOrder
+            hiddenButtons: configGeneral.cfg_powerButtonsHidden
+            onEdited: (newOrder, newHidden) => {
+                configGeneral.cfg_powerButtonOrder = newOrder
+                configGeneral.cfg_powerButtonsHidden = newHidden
+            }
+        }
+
+        QQC2.CheckBox {
+            id: showActionLabels
+            text: i18nd("dev.xarbit.appgrid", "Show labels on power/session buttons")
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Background opacity:")
+
+            QQC2.Slider {
+                id: backgroundOpacity
+                from: 10; to: 100; stepSize: 5
+                Layout.fillWidth: true
+            }
+
+            QQC2.Label {
+                text: Math.round(backgroundOpacity.value) + "%"
+                Layout.minimumWidth: Kirigami.Units.gridUnit * 2
+            }
+        }
+
+        QQC2.CheckBox {
+            id: overrideRadius
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Corner radius:")
+            text: i18nd("dev.xarbit.appgrid", "Use custom corner radius")
+        }
+
+        RowLayout {
+            enabled: overrideRadius.checked
+
+            QQC2.SpinBox {
+                id: cornerRadius
+                from: 0; to: 60
+            }
+
+            QQC2.Label {
+                text: i18nd("dev.xarbit.appgrid", "px")
+                opacity: overrideRadius.checked ? 1.0 : 0.5
+            }
+        }
+
+        // --- Reset ---
+
+        Item { Kirigami.FormData.isSection: true }
+
+        QQC2.Button {
+            Kirigami.FormData.label: ""
+            icon.name: "edit-undo"
+            text: i18nd("dev.xarbit.appgrid", "Reset to Defaults")
+            onClicked: {
+                configGeneral.cfg_icon = configGeneral.defaultIcon
+                configGeneral.cfg_useCustomButtonImage = false
+                configGeneral.cfg_customButtonImage = ""
+                configGeneral.cfg_menuLabel = ""
+                gridColumns.value = 7
+                gridRows.value = 4
+                iconSize.currentIndex = 2
+                sortMode.currentIndex = 1
+                overrideRadius.checked = false
+                cornerRadius.value = 24
+                showDividers.checked = true
+                showScrollbars.checked = false
+                showTooltips.checked = true
+                showNewAppBadge.checked = true
+                iconShadow.checked = true
+                hideLabelsOnFavorites.checked = false
+                sortFavoritesAlphabetically.checked = false
+                backgroundOpacity.value = 85
+                openAnimation.currentIndex = 2
+                enableBlur.checked = true
+                dimBackground.checked = false
+                verticalOffset.value = 0
+                openOnActiveScreen.checked = true
+                showCategoryBar.checked = true
+                searchAll.checked = true
+                startWithFavorites.checked = false
+                shakeOnOpen.checked = true
+                hoverAnimation.currentIndex = 1
+                configGeneral.cfg_powerButtonOrder = ["sleep", "restart", "shutdown", "session"]
+                configGeneral.cfg_powerButtonsHidden = []
+                showActionLabels.checked = false
+                showRecentApps.checked = true
+                useExtraRunners.checked = true
+                useSystemCategories.checked = false
+                hideEmptyCategories.checked = true
+                configGeneral.cfg_terminalShell = ""
+                terminalShell.currentIndex = 0
+            }
+        }
+
+        // --- Hidden applications ---
+
+        Item { Kirigami.FormData.isSection: true }
+
+        ColumnLayout {
+            Kirigami.FormData.label: i18nd("dev.xarbit.appgrid", "Hidden apps:")
+            Kirigami.FormData.labelAlignment: Qt.AlignTop
+            Layout.fillWidth: true
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.Label {
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                text: i18nd("dev.xarbit.appgrid", "Right-click any app in the grid to hide it, or type h: in the search bar.")
+                font: Kirigami.Theme.smallFont
+                opacity: 0.5
+            }
+
+            QQC2.Label {
+                visible: hiddenAppsModel.count === 0
+                text: i18nd("dev.xarbit.appgrid", "No hidden applications.")
+                opacity: 0.5
+                Layout.topMargin: Kirigami.Units.smallSpacing
+            }
+
+            Repeater {
+                model: hiddenAppsModel
+
+                delegate: QQC2.ItemDelegate {
+                    Layout.fillWidth: true
+                    required property string storageId
+                    required property int index
+
+                    property var appInfo: Plasmoid.appsModel.getByStorageId(storageId) || ({})
+
+                    contentItem: RowLayout {
+                        spacing: Kirigami.Units.largeSpacing
+
+                        Kirigami.Icon {
+                            implicitWidth: Kirigami.Units.iconSizes.smallMedium
+                            implicitHeight: Kirigami.Units.iconSizes.smallMedium
+                            source: appInfo.iconName || "application-x-executable"
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 0
+
+                            QQC2.Label {
+                                Layout.fillWidth: true
+                                text: appInfo.name || storageId
+                                elide: Text.ElideRight
+                            }
+
+                            QQC2.Label {
+                                Layout.fillWidth: true
+                                visible: !!appInfo.name
+                                text: storageId
+                                font: Kirigami.Theme.smallFont
+                                opacity: 0.4
+                                elide: Text.ElideRight
+                            }
+                        }
+
+                        QQC2.ToolButton {
+                            icon.name: "view-visible"
+                            QQC2.ToolTip.text: i18nd("dev.xarbit.appgrid", "Unhide")
+                            QQC2.ToolTip.visible: hovered
+                            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+                            onClicked: {
+                                var list = configGeneral.cfg_hiddenApps.slice()
+                                list.splice(index, 1)
+                                configGeneral.cfg_hiddenApps = list
+                            }
+                        }
+                    }
+                }
+            }
+
+            QQC2.Button {
+                visible: hiddenAppsModel.count > 0
+                Layout.topMargin: Kirigami.Units.smallSpacing
+                icon.name: "edit-undo"
+                text: i18nd("dev.xarbit.appgrid", "Unhide All")
+                onClicked: configGeneral.cfg_hiddenApps = []
+            }
         }
     }
 }

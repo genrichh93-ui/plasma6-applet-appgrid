@@ -17,13 +17,17 @@ import org.kde.plasma.plasmoid
 Item {
     id: root
 
+    visible: true
+
+    readonly property bool isHiddenMode: Plasmoid.configuration.icon === "hidden"
+
     readonly property bool vertical: (Plasmoid.formFactor === PlasmaCore.Types.Vertical)
     readonly property bool useCustomButtonImage: (Plasmoid.configuration.useCustomButtonImage
         && Plasmoid.configuration.customButtonImage.length !== 0)
     readonly property bool shouldHaveLabel: !vertical
         && Plasmoid.configuration.menuLabel !== undefined
         && Plasmoid.configuration.menuLabel !== ""
-    readonly property bool shouldHaveIcon: vertical || Plasmoid.configuration.icon !== ""
+    readonly property bool shouldHaveIcon: vertical || (Plasmoid.configuration.icon !== "" && Plasmoid.configuration.icon !== "hidden")
         || useCustomButtonImage
 
     readonly property bool tooSmall: Plasmoid.formFactor === PlasmaCore.Types.Horizontal
@@ -31,8 +35,20 @@ Item {
 
     onWidthChanged: updateSizeHints()
     onHeightChanged: updateSizeHints()
+    onIsHiddenModeChanged: updateSizeHints()
 
     function updateSizeHints() {
+        if (isHiddenMode) {
+            root.width = 0;
+            root.height = 0;
+            root.Layout.minimumWidth = 0;
+            root.Layout.minimumHeight = 0;
+            root.Layout.maximumWidth = 0;
+            root.Layout.maximumHeight = 0;
+            root.Layout.preferredWidth = 0;
+            root.Layout.preferredHeight = 0;
+            return;
+        }
         if (shouldHaveLabel) {
             var iconWidth = shouldHaveIcon ? Math.min(root.height, Kirigami.Units.iconSizes.huge) : 0
             var labelWidth = labelTextField.contentWidth + labelTextField.Layout.leftMargin + labelTextField.Layout.rightMargin
@@ -67,6 +83,7 @@ Item {
         id: iconLabelRow
         anchors.fill: parent
         spacing: 0
+        visible: !root.isHiddenMode
 
         Kirigami.Icon {
             id: buttonIcon
@@ -116,7 +133,8 @@ Item {
         id: mouseArea
 
         anchors.fill: parent
-        hoverEnabled: true
+        hoverEnabled: !root.isHiddenMode
+        enabled: !root.isHiddenMode
 
         Accessible.name: Plasmoid.title
         Accessible.role: Accessible.Button

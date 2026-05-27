@@ -9,10 +9,14 @@
 import QtQuick
 import org.kde.plasma.plasmoid
 
+import org.kde.plasma.core as PlasmaCore
+
 import "migrations.js" as Migrations
 
 PlasmoidItem {
     id: kicker
+
+    Plasmoid.status: Plasmoid.configuration.icon === "hidden" ? PlasmaCore.Types.HiddenStatus : PlasmaCore.Types.ActiveStatus
 
     compactRepresentation: compactRepresentationComponent
     fullRepresentation: fullRepresentationComponent
@@ -43,9 +47,14 @@ PlasmoidItem {
             Plasmoid.updateChecker.enabled = Plasmoid.configuration.checkForUpdates === true
     }
 
-    Plasmoid.icon: Plasmoid.configuration.useCustomButtonImage
-        ? Plasmoid.configuration.customButtonImage
-        : Plasmoid.configuration.icon
+    Plasmoid.icon: {
+        if (Plasmoid.configuration.icon === "hidden") {
+            return "dev.xarbit.appgrid";
+        }
+        return Plasmoid.configuration.useCustomButtonImage
+            ? Plasmoid.configuration.customButtonImage
+            : Plasmoid.configuration.icon;
+    }
 
     Component {
         id: compactRepresentationComponent
