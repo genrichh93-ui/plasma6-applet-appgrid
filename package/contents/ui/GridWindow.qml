@@ -58,7 +58,7 @@ Window {
     height: Screen.height
     visible: false
     color: "transparent"
-    flags: Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint | Qt.Tool
+    flags: Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint | Qt.Window
     transientParent: null
 
     property bool windowConfigured: false
