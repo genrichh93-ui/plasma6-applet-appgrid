@@ -59,6 +59,7 @@ Window {
     visible: false
     color: "transparent"
     flags: Qt.FramelessWindowHint | Qt.NoDropShadowWindowHint | Qt.Tool
+    transientParent: null
 
     property bool windowConfigured: false
 
@@ -234,14 +235,15 @@ Window {
         deactivateGuard.stop()
         panel.resetOnClose()
         Plasmoid.setBlurBehind(root, false, 0, 0, 0, 0, 0)
+        
+        // Hide window immediately to release focus and grabs instantly
+        root.visible = false
+        
         if (animationsEnabled && animStyle !== 0 && animLoader.item) {
-            dimFadeOut.start()
             animLoader.item.close()
-        } else {
-            root.visible = false
-            panel.opacity = 0.0
-            dimOverlay.opacity = 0.0
         }
+        panel.opacity = 0.0
+        dimOverlay.opacity = 0.0
     }
 
     Shortcut {

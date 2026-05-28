@@ -2,9 +2,17 @@
   <img src="images/appgrid-logo.svg" alt="AppGrid" width="128" />
 </p>
 
-<h1 align="center">AppGrid — KDE Plasma 6 Application Launcher</h1>
+<h1 align="center">AppGrid — KDE Plasma 6 Application Launcher (WaveTask Fork)</h1>
 
 A grid-style application launcher for KDE Plasma 6. Ships as two plasmoids — a standalone centered popup (**AppGrid**) and a native Plasma panel popup (**AppGrid Panel**) — both sharing the same grid, search, categories, and config.
+
+> [!NOTE]
+> **🚀 Exclusive Fork Features:** This fork adds native support for seamless **WaveTask Dock Integration (Background Mode)**!
+
+### 🌟 WaveTask Background Mode:
+This fork includes a new **"Hide panel icon (WaveTask integration)"** checkbox under the **Behavior** settings tab:
+* When enabled, AppGrid's panel/containment icon is completely hidden (0px width, invisible) while the applet remains fully loaded and running in memory.
+* This allows the **WaveTask macOS-style Dock**'s Launchpad icon to trigger AppGrid smoothly in the background, keeping your Plasma panel clean and symbol-free!
 
 ![KDE Plasma](https://img.shields.io/badge/KDE_Plasma-6.0+-blue)
 ![License](https://img.shields.io/badge/License-GPL--2.0--or--later-green)
